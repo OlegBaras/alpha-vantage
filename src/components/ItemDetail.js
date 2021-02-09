@@ -7,7 +7,7 @@ function ItemDetail({ match }) {
   // const [item, setItem] = useState({});
   const [metaData, setMetaData] = useState({});
   const [timeSeries, setTimeSeries] = useState({});
-
+  //testing
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
