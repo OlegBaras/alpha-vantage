@@ -58,14 +58,14 @@ function Search() {
           value={filterValue}
           onChange={setFilterV}
         ></input>
-        <span> FILTER BY </span>
+        {/* <span> FILTER BY </span>
         <select>
           <option value="type">type</option>
           <option value="region">region</option>
           <option value="timezone">timezone</option>
           <option value="currency">currency</option>
           <option value="matchScore">matchScore</option>
-        </select>
+        </select> */}
         <button type="submit">Search</button>
       </form>
 
