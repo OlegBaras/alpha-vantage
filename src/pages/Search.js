@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "../App.css";
+import "../css/Search.css";
 
 function Search() {
   const API_KEY = localStorage.getItem("apiKey");
@@ -50,11 +51,14 @@ function Search() {
   function filter(e) {
     e.preventDefault();
     let tempData = originalData.filter((item) => {
-      console.log(item[e.target.name]);
-
       return item[e.target.name].toLowerCase() === e.target.value.toLowerCase();
     });
     setDataToDisplay(tempData);
+  }
+  function getUniqueValues(array, key) {
+    let unique = [...new Set(array.map((item) => item[key]))];
+
+    return unique;
   }
 
   return (
@@ -87,77 +91,99 @@ function Search() {
               <div>
                 <form>
                   <p>Filter menu</p>
-                  <select name="3. type" onChange={(e) => filter(e)}>
-                    <option value="" selected disabled hidden>
+                  <select
+                    defaultValue=""
+                    id="type"
+                    name="3. type"
+                    onChange={(e) => filter(e)}
+                  >
+                    <option key="default" value="" disabled hidden>
                       Select Type
                     </option>
-                    {originalData.map((item) => (
-                      <option key={item["1. symbol"]} value={item["3. type"]}>
-                        {item["3. type"]}
+                    {getUniqueValues(originalData, "3. type").map((item) => (
+                      <option key={item} value={item}>
+                        {item}
                       </option>
                     ))}
                   </select>
 
-                  <select name="4. region" onChange={(e) => filter(e)}>
-                    <option value="" selected disabled hidden>
+                  <select
+                    defaultValue=""
+                    name="4. region"
+                    onChange={(e) => filter(e)}
+                  >
+                    <option key="default" value="" disabled hidden>
                       Select Region
                     </option>
-                    {originalData.map((item) => (
-                      <option key={item["1. symbol"]} value={item["4. region"]}>
-                        {item["4. region"]}
+                    {getUniqueValues(originalData, "4. region").map((item) => (
+                      <option key={item} value={item}>
+                        {item}
                       </option>
                     ))}
                   </select>
 
-                  <select name="7. timezone" onChange={(e) => filter(e)}>
-                    <option value="" selected disabled hidden>
+                  <select
+                    defaultValue=""
+                    name="7. timezone"
+                    onChange={(e) => filter(e)}
+                  >
+                    <option key="default" value="" disabled hidden>
                       Select Time Zone
                     </option>
-                    {originalData.map((item) => (
-                      <option
-                        key={item["1. symbol"]}
-                        value={item["7. timezone"]}
-                      >
-                        {item["7. timezone"]}
-                      </option>
-                    ))}
+                    {getUniqueValues(originalData, "7. timezone").map(
+                      (item) => (
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      )
+                    )}
                   </select>
-                  <select name="8. currency" onChange={(e) => filter(e)}>
-                    <option value="" selected disabled hidden>
+                  <select
+                    defaultValue=""
+                    name="8. currency"
+                    onChange={(e) => filter(e)}
+                  >
+                    <option key="default" value="" disabled hidden>
                       Select Currency
                     </option>
-                    {originalData.map((item) => (
-                      <option
-                        key={item["1. symbol"]}
-                        value={item["8. currency"]}
-                      >
-                        {item["8. currency"]}
-                      </option>
-                    ))}
+                    {getUniqueValues(originalData, "8. currency").map(
+                      (item) => (
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      )
+                    )}
                   </select>
-                  <select name="9. matchScore" onChange={(e) => filter(e)}>
-                    <option value="" selected disabled hidden>
+                  <select
+                    defaultValue=""
+                    name="9. matchScore"
+                    onChange={(e) => filter(e)}
+                  >
+                    <option key="default" value="" disabled hidden>
                       Select MatchScore
                     </option>
-                    {originalData.map((item) => (
-                      <option
-                        key={item["1. symbol"]}
-                        value={item["9. matchScore"]}
-                      >
-                        {item["9. matchScore"]}
-                      </option>
-                    ))}
+                    {getUniqueValues(originalData, "9. matchScore").map(
+                      (item) => (
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      )
+                    )}
                   </select>
                 </form>
                 <div className="dataTable">
                   {dataToDisplay &&
                     dataToDisplay.map((item) => (
-                      <div key={item["1. symbol"]}>
-                        <Link to={`search/${item["1. symbol"]}`}>
-                          {item["1. symbol"]} : {item["2. name"]} :{" "}
-                          {item["3. type"]}
-                        </Link>
-                      </div>
+                      // <div key={item["1. symbol"]}>
+                      <Link
+                        key={item["1. symbol"]}
+                        className="link"
+                        to={`search/${item["1. symbol"]}`}
+                      >
+                        {item["1. symbol"]} : {item["2. name"]} :{" "}
+                        {item["3. type"]}
+                      </Link>
+                      // </div>
                     ))}
                 </div>
               </div>
