@@ -18,3 +18,10 @@ nav {
   align-items: center;
   list-style: none;
 }
+.result-list {
+  /* border: 2px solid red; */
+}
+
+.search-window {
+  /* border: 2px solid green; */
+}
