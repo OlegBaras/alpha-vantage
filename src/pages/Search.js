@@ -47,13 +47,6 @@ function Search() {
     setDataToDisplay(originalData);
   }
 
-  // function additionalTest() {
-  //   let tempData = originalData.filter((item) => {
-  //     return item["4. region"].toLowerCase() === "frankfurt";
-  //   });
-  //   setDataToDisplay(tempData);
-  // }
-
   function filter(e) {
     e.preventDefault();
     let tempData = originalData.filter((item) => {
@@ -179,66 +172,3 @@ function Search() {
 }
 
 export default Search;
-{
-  /* <span> FILTER BY </span>
-        <select>
-          <option value="type">type</option>
-          <option value="region">region</option>
-          <option value="timezone">timezone</option>
-          <option value="currency">currency</option>
-          <option value="matchScore">matchScore</option>
-        </select> */
-}
-
-{
-  /* <select id="types" onChange={(e) => handleTypeChange(e)}>
-          <option value="">Select Type</option>
-          <option label="Equity" value="Equity">
-            EQUITY
-          </option>
-          <option label="ETF" value="ETF">
-            ETF
-          </option>
-        </select>
-
-        <select id="regions">
-          <option value="">Select Region</option>
-          <option label="United States" value="United States">
-            United States
-          </option>
-          <option label="United Kingdom" value="United Kingdom">
-            United Kingdom
-          </option>
-          <option label="Frankfurt" value="Frankfurt">
-            Frankfurt
-          </option>
-          <option label="XETRA" value="XETTRA">
-            XETRA
-          </option>
-        </select>
-
-        <select>
-          <option value="">Select Timezone</option>
-          <option label="utc-05" value="utc-05">
-            utc-05
-          </option>
-          <option label="utc+00" value="utc+00">
-            utc+00
-          </option>
-          <option label="utc+01" value="utc+01">
-            utc+01
-          </option>
-        </select>
-        <select>
-          <option value="">Select Currency</option>
-          <option label="USD" value="USD">
-            USD
-          </option>
-          <option label="GBP" value="GBP">
-            GBP
-          </option>
-          <option label="EUR" value="EUR">
-            EUR
-          </option>
-        </select> */
-}
