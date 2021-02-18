@@ -14,11 +14,12 @@ function Search() {
   );
   const [originalData, setOriginalData] = useState([]);
   const [dataToDisplay, setDataToDisplay] = useState([]);
-  const [regions, setRegions] = useState([
-    { id: "1", region: "Frankfurt" },
-    { id: "2", region: "United States" },
-    { id: "3", region: "United Kingdom" },
-  ]);
+
+  const [typeValue, setTypeValue] = useState("");
+  const [regionValue, setRegionValue] = useState("");
+  const [timeZoneValue, setTimeZoneValue] = useState("");
+  const [currencyValue, setCurrencyValue] = useState("");
+  const [matchScoreValue, setMatchScoreValue] = useState("");
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -31,6 +32,11 @@ function Search() {
         );
         setOriginalData(result.data.bestMatches);
         setDataToDisplay(result.data.bestMatches);
+        setTypeValue("");
+        setRegionValue("");
+        setTimeZoneValue("");
+        setCurrencyValue("");
+        setMatchScoreValue("");
       } catch (error) {
         setIsError(true);
       }
@@ -48,13 +54,105 @@ function Search() {
     setDataToDisplay(originalData);
   }
 
-  function filter(e) {
-    e.preventDefault();
-    let tempData = originalData.filter((item) => {
-      return item[e.target.name].toLowerCase() === e.target.value.toLowerCase();
-    });
-    setDataToDisplay(tempData);
+  function filterType(e) {
+    if (e.target.value === "all") {
+      returnOriginal();
+      setTypeValue(e.target.value);
+    } else {
+      e.preventDefault();
+      setTypeValue(e.target.value);
+      setRegionValue("");
+      setTimeZoneValue("");
+      setCurrencyValue("");
+      setMatchScoreValue("");
+
+      let tempData = originalData.filter((item) => {
+        return (
+          item[e.target.name].toLowerCase() === e.target.value.toLowerCase()
+        );
+      });
+      setDataToDisplay(tempData);
+    }
   }
+  function filterRegion(e) {
+    if (e.target.value === "all") {
+      returnOriginal();
+      setRegionValue(e.target.value);
+    } else {
+      e.preventDefault();
+      setRegionValue(e.target.value);
+      setTypeValue("");
+      setTimeZoneValue("");
+      setCurrencyValue("");
+      setMatchScoreValue("");
+
+      let tempData = originalData.filter((item) => {
+        return (
+          item[e.target.name].toLowerCase() === e.target.value.toLowerCase()
+        );
+      });
+      setDataToDisplay(tempData);
+    }
+  }
+  function filterTimeZone(e) {
+    if (e.target.value === "all") {
+      returnOriginal();
+      setTimeZoneValue(e.target.value);
+    } else {
+      e.preventDefault();
+      setTimeZoneValue(e.target.value);
+
+      setRegionValue("");
+      setTypeValue("");
+      setCurrencyValue("");
+      setMatchScoreValue("");
+      let tempData = originalData.filter((item) => {
+        return (
+          item[e.target.name].toLowerCase() === e.target.value.toLowerCase()
+        );
+      });
+      setDataToDisplay(tempData);
+    }
+  }
+  function filterMatchScore(e) {
+    if (e.target.value === "all") {
+      returnOriginal();
+      setMatchScoreValue(e.target.value);
+    } else {
+      e.preventDefault();
+      setMatchScoreValue(e.target.value);
+      setTypeValue("");
+      setRegionValue("");
+      setTimeZoneValue("");
+      setCurrencyValue("");
+      let tempData = originalData.filter((item) => {
+        return (
+          item[e.target.name].toLowerCase() === e.target.value.toLowerCase()
+        );
+      });
+      setDataToDisplay(tempData);
+    }
+  }
+  function filterCurrency(e) {
+    if (e.target.value === "all") {
+      returnOriginal();
+      setCurrencyValue(e.target.value);
+    } else {
+      e.preventDefault();
+      setCurrencyValue(e.target.value);
+      setRegionValue("");
+      setTimeZoneValue("");
+      setTypeValue("");
+      setMatchScoreValue("");
+      let tempData = originalData.filter((item) => {
+        return (
+          item[e.target.name].toLowerCase() === e.target.value.toLowerCase()
+        );
+      });
+      setDataToDisplay(tempData);
+    }
+  }
+
   function getUniqueValues(array, key) {
     let unique = [...new Set(array.map((item) => item[key]))];
 
@@ -92,13 +190,16 @@ function Search() {
                 <form>
                   <p>Filter menu</p>
                   <select
-                    defaultValue=""
+                    value={typeValue}
                     id="type"
                     name="3. type"
-                    onChange={(e) => filter(e)}
+                    onChange={(e) => filterType(e)}
                   >
                     <option key="default" value="" disabled hidden>
                       Select Type
+                    </option>
+                    <option key="all" value="all">
+                      All
                     </option>
                     {getUniqueValues(originalData, "3. type").map((item) => (
                       <option key={item} value={item}>
@@ -108,12 +209,15 @@ function Search() {
                   </select>
 
                   <select
-                    defaultValue=""
+                    value={regionValue}
                     name="4. region"
-                    onChange={(e) => filter(e)}
+                    onChange={(e) => filterRegion(e)}
                   >
                     <option key="default" value="" disabled hidden>
                       Select Region
+                    </option>
+                    <option key="all" value="all">
+                      All
                     </option>
                     {getUniqueValues(originalData, "4. region").map((item) => (
                       <option key={item} value={item}>
@@ -123,12 +227,15 @@ function Search() {
                   </select>
 
                   <select
-                    defaultValue=""
+                    value={timeZoneValue}
                     name="7. timezone"
-                    onChange={(e) => filter(e)}
+                    onChange={(e) => filterTimeZone(e)}
                   >
                     <option key="default" value="" disabled hidden>
                       Select Time Zone
+                    </option>
+                    <option key="all" value="all">
+                      All
                     </option>
                     {getUniqueValues(originalData, "7. timezone").map(
                       (item) => (
@@ -139,12 +246,15 @@ function Search() {
                     )}
                   </select>
                   <select
-                    defaultValue=""
+                    value={currencyValue}
                     name="8. currency"
-                    onChange={(e) => filter(e)}
+                    onChange={(e) => filterCurrency(e)}
                   >
                     <option key="default" value="" disabled hidden>
                       Select Currency
+                    </option>
+                    <option key="all" value="all">
+                      All
                     </option>
                     {getUniqueValues(originalData, "8. currency").map(
                       (item) => (
@@ -155,12 +265,15 @@ function Search() {
                     )}
                   </select>
                   <select
-                    defaultValue=""
+                    value={matchScoreValue}
                     name="9. matchScore"
-                    onChange={(e) => filter(e)}
+                    onChange={(e) => filterMatchScore(e)}
                   >
                     <option key="default" value="" disabled hidden>
                       Select MatchScore
+                    </option>
+                    <option key="all" value="all">
+                      All
                     </option>
                     {getUniqueValues(originalData, "9. matchScore").map(
                       (item) => (

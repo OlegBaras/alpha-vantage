@@ -12,6 +12,11 @@
 }
 .link {
   padding: 1rem;
+  color: black;
+}
+.link:hover {
+  background-color: grey;
+  color: white;
 }
 
 .dataTable:first-child {
