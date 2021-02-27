@@ -4,6 +4,7 @@ import Intraday from "./ItemDetails/Intraday";
 import Daily from "./ItemDetails/Daily";
 import Weekly from "./ItemDetails/Weekly";
 import Monthly from "./ItemDetails/Monthly";
+import Quote from "./ItemDetails/Quote";
 
 function ItemDetail({ match }) {
   const [value, setValue] = useState([]);
@@ -28,6 +29,9 @@ function ItemDetail({ match }) {
         <button value="TIME_SERIES_MONTHLY" onClick={(e) => handleClick(e)}>
           Monthly
         </button>
+        <button value="GLOBAL_QUOTE" onClick={(e) => handleClick(e)}>
+          Quote
+        </button>
       </div>
 
       {value === "TIME_SERIES_INTRADAY" && (
@@ -42,6 +46,7 @@ function ItemDetail({ match }) {
       {value === "TIME_SERIES_MONTHLY" && (
         <Monthly company={company} value={value} />
       )}
+      {value === "GLOBAL_QUOTE" && <Quote company={company} value={value} />}
     </div>
   );
 }
