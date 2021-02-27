@@ -29,7 +29,6 @@ export default function Intraday({ company, value }) {
   return (
     <div>
       <p>{company}</p> <p>{value}</p>
-      <p>{API_KEY}</p>
       {isError && <div>Something went wrong </div>}
       {isLoading ? (
         <div> Loading...</div>

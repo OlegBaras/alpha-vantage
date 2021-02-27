@@ -5,7 +5,6 @@ function Daily({ company, value }) {
   const API_KEY = localStorage.getItem("apiKey");
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [metaData, setMetaData] = useState({});
   const [timeSeries, setTimeSeries] = useState({});
   useEffect(() => {
     const fetchItem = async () => {
@@ -16,8 +15,7 @@ function Daily({ company, value }) {
         const result = await axios(
           `https://www.alphavantage.co/query?function=${value}&symbol=${company}&apikey=${API_KEY}`
         );
-        setMetaData(result.data["Meta Data"]);
-        setTimeSeries(result.data["Time Series (Daily)"]);
+        setTimeSeries(result.data["Global Quote"]);
       } catch (error) {
         setIsError(true);
       }
@@ -34,26 +32,12 @@ function Daily({ company, value }) {
         <div> Loading...</div>
       ) : (
         <div>
-          <div>
-            {metaData ? (
-              Object.keys(metaData).map(function (key, index) {
-                return (
-                  <div key={index}>
-                    {key} : {metaData[key]}
-                  </div>
-                );
-              })
-            ) : (
-              <>no meta data</>
-            )}
-          </div>
           <div className="time-series">
             {timeSeries ? (
               Object.keys(timeSeries).map(function (key, index) {
                 return (
                   <div key={index}>
-                    {key} : open : {timeSeries[key]["1. open"]}
-                    {key} : close : {timeSeries[key]["4. close"]}
+                    {key} : {timeSeries[key]}
                   </div>
                 );
               })
