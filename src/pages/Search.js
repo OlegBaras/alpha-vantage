@@ -25,28 +25,46 @@ function Search() {
       setIsError(false);
       setIsLoading(true);
 
-      try {
-        const result = await axios(
-          `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchKeyWord}&apikey=${API_KEY}`
-        );
-        setOriginalData(result.data.bestMatches);
-        setDataToDisplay(result.data.bestMatches);
-        setTypeValue("");
-        setRegionValue("");
-        setTimeZoneValue("");
-        setCurrencyValue("");
-        setMatchScoreValue("");
-      } catch (error) {
-        setIsError(true);
+      if (localStorage.getItem("SearchKeyWord")) {
+        setSearchKeyWord(localStorage.getItem("SearchKeyWord"));
+        try {
+          const result = await axios(
+            `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchKeyWord}&apikey=${API_KEY}`
+          );
+          if (result.data.bestMatches) {
+            setOriginalData(result.data.bestMatches);
+            setDataToDisplay(result.data.bestMatches);
+            setTypeValue("");
+            setRegionValue("");
+            setTimeZoneValue("");
+            setCurrencyValue("");
+            setMatchScoreValue("");
+          } else {
+            setOriginalData([]);
+            setDataToDisplay([]);
+            setTypeValue("");
+            setRegionValue("");
+            setTimeZoneValue("");
+            setCurrencyValue("");
+            setMatchScoreValue("");
+          }
+        } catch (error) {
+          setIsError(true);
+        }
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
     fetchItems();
     setUrl("");
   }, [url]);
 
   function setSearchV(e) {
+    // if (localStorage.getItem("SearchKeyWord")) {
+    //   setSearchKeyWord(localStorage.getItem("SearchKeyWord"));
+    // } else {
     setSearchKeyWord(e.target.value);
+    localStorage.setItem("SearchKeyWord", e.target.value);
+    // }
   }
 
   function returnOriginal() {
@@ -169,23 +187,24 @@ function Search() {
   }
 
   function getUniqueValues(array, key) {
-    let unique = [...new Set(array.map((item) => item[key]))];
+    if (Array.isArray(array)) {
+      let unique = [...new Set(array.map((item) => item[key]))];
 
-    return unique;
+      return unique;
+    }
   }
   function setLocaleValue() {
-    console.log("localee");
-    // localStorage.setItem("searchKey", searchKey);
+    console.log("locale");
   }
 
   return (
     <div className="search-window">
       <form
         onSubmit={(event) => {
+          event.preventDefault();
           setUrl(
             `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchKeyWord}&apikey=${API_KEY}`
           );
-          event.preventDefault();
         }}
       >
         <label>Input search keyword : </label>

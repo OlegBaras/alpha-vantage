@@ -12,18 +12,28 @@ function Daily({ company, value }) {
     const fetchItem = async () => {
       setIsError(false);
       setIsLoading(true);
+      let unmounted = false;
 
       try {
-        const result = await axios(
-          `https://www.alphavantage.co/query?function=${value}&symbol=${company}&apikey=${API_KEY}`
-        );
-        setMetaData(result.data["Meta Data"]);
-        setTimeSeries(result.data["Time Series (Daily)"]);
-        setNote(result.data.Note);
+        if (!unmounted) {
+          const result = await axios(
+            `https://www.alphavantage.co/query?function=${value}&symbol=${company}&apikey=${API_KEY}`
+            // { timeout: 100 }
+          );
+
+          setMetaData(result.data["Meta Data"]);
+          setTimeSeries(result.data["Time Series (Daily)"]);
+          setNote(result.data.Note);
+        }
       } catch (error) {
-        setIsError(true);
+        if (!unmounted) {
+          setIsError(true);
+        }
       }
       setIsLoading(false);
+      return () => {
+        unmounted = true;
+      };
     };
     fetchItem();
   }, []);
