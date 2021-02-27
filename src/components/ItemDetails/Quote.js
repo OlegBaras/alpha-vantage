@@ -6,6 +6,7 @@ function Daily({ company, value }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [timeSeries, setTimeSeries] = useState({});
+  const [note, setNote] = useState();
   useEffect(() => {
     const fetchItem = async () => {
       setIsError(false);
@@ -16,6 +17,7 @@ function Daily({ company, value }) {
           `https://www.alphavantage.co/query?function=${value}&symbol=${company}&apikey=${API_KEY}`
         );
         setTimeSeries(result.data["Global Quote"]);
+        setNote(result.data.Note);
       } catch (error) {
         setIsError(true);
       }
@@ -26,6 +28,7 @@ function Daily({ company, value }) {
 
   return (
     <div>
+      {note && <div>{note}</div>}
       <p>{company}</p> <p>{value}</p>
       {isError && <div>Something went wrong </div>}
       {isLoading ? (
