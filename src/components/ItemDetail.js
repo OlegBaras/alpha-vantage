@@ -9,12 +9,13 @@ import IndicatorSMA from "./ItemDetails/Indicators/IndicatorSMA";
 import IndicatorVWAP from "./ItemDetails/Indicators/IndicatorVWAP";
 import IndicatorBBANDS from "./ItemDetails/Indicators/IndicatorBBANDS";
 import IndicatorSTOCH from "./ItemDetails/Indicators/IndicatorSTOCH";
+import { useHistory } from "react-router-dom";
 
 function ItemDetail({ match }) {
   const [value, setValue] = useState([]);
   const [indicatorValue, setIndicatorValue] = useState("");
   const company = match.params.id;
-
+  const history = useHistory();
   /* Button Handler*/
   function handleClick(e) {
     setValue(e.target.value);
@@ -45,6 +46,7 @@ function ItemDetail({ match }) {
         <button value="GLOBAL_QUOTE" onClick={(e) => handleClick(e)}>
           Quote
         </button>
+        <button onClick={() => history.goBack()}>Go Back</button>
         <select
           value={indicatorValue}
           id="Indicators"

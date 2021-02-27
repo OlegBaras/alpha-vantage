@@ -12,6 +12,7 @@ function LandingPage() {
   function handleSubmit(e) {
     e.preventDefault();
     localStorage.setItem("apiKey", apiKey);
+    localStorage.setItem("SearchKeyWord", "");
     history.push("search");
   }
 
