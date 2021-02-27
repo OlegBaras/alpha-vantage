@@ -7,6 +7,8 @@ export default function Intraday({ company, value }) {
   const [isError, setIsError] = useState(false);
   const [metaData, setMetaData] = useState({});
   const [timeSeries, setTimeSeries] = useState({});
+  const [note, setNote] = useState();
+
   useEffect(() => {
     const fetchItem = async () => {
       setIsError(false);
@@ -18,6 +20,7 @@ export default function Intraday({ company, value }) {
         );
         setMetaData(result.data["Meta Data"]);
         setTimeSeries(result.data["Time Series (5min)"]);
+        setNote(result.data.Note);
       } catch (error) {
         setIsError(true);
       }
@@ -28,6 +31,7 @@ export default function Intraday({ company, value }) {
 
   return (
     <div>
+      {note && <div>{note}</div>}
       <p>{company}</p> <p>{value}</p>
       {isError && <div>Something went wrong </div>}
       {isLoading ? (
