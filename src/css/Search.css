@@ -12,13 +12,23 @@
 }
 .link {
   padding: 1rem;
-  color: black;
+  /* color: black; */
 }
 .link:hover {
-  background-color: grey;
-  color: white;
 }
 
 .dataTable:first-child {
   background-color: green;
+}
+
+.meta-data {
+  border: 2px solid green;
+}
+
+.time-series {
+  border: 2px solid purple;
+}
+
+.item-details {
+  border: 2px solid red;
 }

@@ -1,76 +1,48 @@
-import React, { useState, useEffect } from "react";
-import "../App.css";
+import React, { useState } from "react";
 import axios from "axios";
+import Intraday from "./ItemDetails/Intraday";
+import Daily from "./ItemDetails/Daily";
+import Weekly from "./ItemDetails/Weekly";
+import Monthly from "./ItemDetails/Monthly";
 
 function ItemDetail({ match }) {
-  const API_KEY = localStorage.getItem("apiKey");
-  // const [item, setItem] = useState({});
-  const [metaData, setMetaData] = useState({});
-  const [timeSeries, setTimeSeries] = useState({});
-  //testing
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
+  const [value, setValue] = useState([]);
+  const company = match.params.id;
 
-  useEffect(() => {
-    const fetchItem = async () => {
-      setIsError(false);
-      setIsLoading(true);
-      try {
-        const result = await axios(
-          `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${match.params.id}&apikey=${API_KEY}`
-        );
-        //setItem(result.data);
-        setMetaData(result.data["Meta Data"]);
-        setTimeSeries(result.data["Time Series (Daily)"]);
-        const metaData = result.data["Meta Data"];
-        //const timeSeries = result.data["Time Series (Daily)"];
-
-        Object.keys(metaData).map(function (key, index) {
-          //console.log(metaData);
-          // console.log(metaData[key]);
-        });
-      } catch (error) {
-        setIsError(true);
-      }
-      setIsLoading(false);
-    };
-    fetchItem();
-  }, []);
+  function handleClick(e) {
+    setValue(e.target.value);
+  }
   return (
     <div>
-      {isError && <div>Something went wrong..</div>}
-      {isLoading ? (
-        <div>Loading...</div>
-      ) : (
-        <div>
-          {match.params.id}
-          {metaData ? (
-            Object.keys(metaData).map(function (key, index) {
-              return (
-                <div key={index}>
-                  {key} : {metaData[key]}
-                </div>
-              );
-            })
-          ) : (
-            <></>
-          )}
-          {timeSeries ? (
-            Object.keys(timeSeries).map(function (key, index) {
-              return (
-                <div key={index}>
-                  {key} : open : {timeSeries[key]["1. open"]}
-                  {key} : close : {timeSeries[key]["4. close"]}
-                </div>
-              );
-            })
-          ) : (
-            <></>
-          )}
-        </div>
+      <h1>{match.params.id}</h1>
+      <div>
+        <button value="TIME_SERIES_INTRADAY" onClick={(e) => handleClick(e)}>
+          Intraday
+        </button>
+        <button value="TIME_SERIES_DAILY" onClick={(e) => handleClick(e)}>
+          Daily
+        </button>
+        <button value="TIME_SERIES_WEEKLY" onClick={(e) => handleClick(e)}>
+          Weekly
+        </button>
+        <button value="TIME_SERIES_MONTHLY" onClick={(e) => handleClick(e)}>
+          Monthly
+        </button>
+      </div>
+
+      {value === "TIME_SERIES_INTRADAY" && (
+        <Intraday company={company} value={value} />
+      )}
+      {value === "TIME_SERIES_DAILY" && (
+        <Daily company={company} value={value} />
+      )}
+      {value === "TIME_SERIES_WEEKLY" && (
+        <Weekly company={company} value={value} />
+      )}
+      {value === "TIME_SERIES_MONTHLY" && (
+        <Monthly company={company} value={value} />
       )}
     </div>
   );
 }
-
 export default ItemDetail;
