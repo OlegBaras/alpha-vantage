@@ -13,12 +13,14 @@ function Search() {
     `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchKeyWord}&apikey=${API_KEY}`
   );
   const [originalData, setOriginalData] = useState([]);
-  const [dataToDisplay, setDataToDisplay] = useState([]);
+  const [dataToDisplay, setDataToDisplay] = useState(null);
   const [typeValue, setTypeValue] = useState("");
   const [regionValue, setRegionValue] = useState("");
   const [timeZoneValue, setTimeZoneValue] = useState("");
   const [currencyValue, setCurrencyValue] = useState("");
   const [matchScoreValue, setMatchScoreValue] = useState("");
+
+  const loading = <div>loading...</div>;
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -27,44 +29,37 @@ function Search() {
 
       if (localStorage.getItem("SearchKeyWord")) {
         setSearchKeyWord(localStorage.getItem("SearchKeyWord"));
-        try {
-          const result = await axios(
-            `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchKeyWord}&apikey=${API_KEY}`
-          );
-          if (result.data.bestMatches) {
-            setOriginalData(result.data.bestMatches);
-            setDataToDisplay(result.data.bestMatches);
-            setTypeValue("");
-            setRegionValue("");
-            setTimeZoneValue("");
-            setCurrencyValue("");
-            setMatchScoreValue("");
-          } else {
-            setOriginalData([]);
-            setDataToDisplay([]);
-            setTypeValue("");
-            setRegionValue("");
-            setTimeZoneValue("");
-            setCurrencyValue("");
-            setMatchScoreValue("");
-          }
-        } catch (error) {
-          setIsError(true);
-        }
-        setIsLoading(false);
       }
+
+      try {
+        const result = await axios(
+          `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchKeyWord}&apikey=${API_KEY}`
+        );
+        if (result.data.bestMatches) {
+          setOriginalData(result.data.bestMatches);
+          setDataToDisplay(result.data.bestMatches);
+        } else {
+          setOriginalData([]);
+          setDataToDisplay(null);
+        }
+        setTypeValue("");
+        setRegionValue("");
+        setTimeZoneValue("");
+        setCurrencyValue("");
+        setMatchScoreValue("");
+      } catch (error) {
+        setIsError(true);
+      }
+
+      setIsLoading(false);
     };
     fetchItems();
     setUrl("");
   }, [url]);
 
   function setSearchV(e) {
-    // if (localStorage.getItem("SearchKeyWord")) {
-    //   setSearchKeyWord(localStorage.getItem("SearchKeyWord"));
-    // } else {
     setSearchKeyWord(e.target.value);
     localStorage.setItem("SearchKeyWord", e.target.value);
-    // }
   }
 
   function returnOriginal() {
