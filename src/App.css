@@ -1,8 +1,18 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .App {
+  height: 100vh;
   text-align: center;
+  display: flex;
+  flex-direction: column;
 }
 
 nav {
+  justify-self: flex-start;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -17,11 +27,4 @@ nav {
   justify-content: space-around;
   align-items: center;
   list-style: none;
-}
-.result-list {
-  /* border: 2px solid red; */
-}
-
-.search-window {
-  /* border: 2px solid green; */
 }

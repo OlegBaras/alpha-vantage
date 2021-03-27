@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import history from "../components/History";
+import "../css/LandingPage.css";
 
 function LandingPage() {
   const [apiKey, setApiKey] = useState("");
@@ -17,9 +18,13 @@ function LandingPage() {
   }
 
   return (
-    <div>
-      <form>
+    <div className="landing-page">
+      {/* <form> */}
+      <div className="landing-title">
         <h1>Landing Page</h1>
+      </div>
+
+      <div className="landing-content">
         <h2>Input API Key:</h2>
         <input
           type="text"
@@ -34,7 +39,8 @@ function LandingPage() {
         >
           Submit
         </button>
-      </form>
+        {/* </form> */}
+      </div>
     </div>
   );
 }

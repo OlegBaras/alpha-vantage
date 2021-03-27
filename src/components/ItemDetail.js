@@ -29,7 +29,9 @@ function ItemDetail({ match }) {
 
   return (
     <div>
+      <button onClick={() => history.goBack()}>Go Back</button>
       <h1>{match.params.id}</h1>
+      <h3>Please select one of the options to display data</h3>
       <div>
         <button value="TIME_SERIES_INTRADAY" onClick={(e) => handleClick(e)}>
           Intraday 5min
@@ -46,7 +48,7 @@ function ItemDetail({ match }) {
         <button value="GLOBAL_QUOTE" onClick={(e) => handleClick(e)}>
           Quote
         </button>
-        <button onClick={() => history.goBack()}>Go Back</button>
+
         <select
           value={indicatorValue}
           id="Indicators"

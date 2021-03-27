@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import "../App.css";
 import "../css/Search.css";
+import { AgGridReact } from "ag-grid-react";
+import "ag-grid-community/dist/styles/ag-grid.css";
+import "ag-grid-community/dist/styles/ag-theme-balham.css";
 
 function Search() {
   const API_KEY = localStorage.getItem("apiKey");
@@ -19,9 +22,37 @@ function Search() {
   const [timeZoneValue, setTimeZoneValue] = useState("");
   const [currencyValue, setCurrencyValue] = useState("");
   const [matchScoreValue, setMatchScoreValue] = useState("");
-
-  const loading = <div>loading...</div>;
-
+  const columnDefs = [
+    { headerName: "Symbol", field: "symbol", sortable: true, filter: true },
+    { headerName: "Name", field: "name", sortable: true, filter: true },
+    { headerName: "Type", field: "type", sortable: true, filter: true },
+    { headerName: "Region", field: "region", sortable: true, filter: true },
+    {
+      headerName: "Market Open",
+      field: "marketOpen",
+      sortable: true,
+      filter: true,
+    },
+    {
+      headerName: "Market Close",
+      field: "marketClose",
+      sortable: true,
+      filter: true,
+    },
+    { headerName: "Timezona", field: "timezone", sortable: true, filter: true },
+    { headerName: "Currency", field: "currency", sortable: true, filter: true },
+    {
+      headerName: "MatchScore",
+      field: "matchScore",
+      sortable: true,
+      filter: true,
+    },
+  ];
+  const [rowData, setRowData] = useState([]);
+  const renameKey = (obj, oldKey, newKey) => {
+    obj[newKey] = obj[oldKey];
+    delete obj[oldKey];
+  };
   useEffect(() => {
     const fetchItems = async () => {
       setIsError(false);
@@ -36,21 +67,40 @@ function Search() {
           `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchKeyWord}&apikey=${API_KEY}`
         );
         if (result.data.bestMatches) {
-          setOriginalData(result.data.bestMatches);
-          setDataToDisplay(result.data.bestMatches);
+          const arr = result.data.bestMatches;
+          arr.forEach((obj) => {
+            renameKey(obj, "1. symbol", "symbol");
+            renameKey(obj, "2. name", "name");
+            renameKey(obj, "3. type", "type");
+            renameKey(obj, "4. region", "region");
+            renameKey(obj, "5. marketOpen", "marketOpen");
+            renameKey(obj, "6. marketClose", "marketClose");
+            renameKey(obj, "7. timezone", "timezone");
+            renameKey(obj, "8. currency", "currency");
+            renameKey(obj, "9. matchScore", "matchScore");
+          });
+          const updatedJson = arr;
+          setRowData(updatedJson);
+          // setOriginalData(result.data.bestMatches);
+          // setDataToDisplay(result.data.bestMatches);
+          // console.log(rowData);
         } else {
-          setOriginalData([]);
-          setDataToDisplay(null);
+          setRowData([]);
+
+          // setOriginalData([]);
+          // setDataToDisplay(null);
         }
-        setTypeValue("");
-        setRegionValue("");
-        setTimeZoneValue("");
-        setCurrencyValue("");
-        setMatchScoreValue("");
+        setRowData(result.data.bestMatches);
+
+        // setTypeValue("");
+        // setRegionValue("");
+        // setTimeZoneValue("");
+        // setCurrencyValue("");
+        // setMatchScoreValue("");
       } catch (error) {
         setIsError(true);
       }
-
+      console.log(rowData);
       setIsLoading(false);
     };
     fetchItems();
@@ -62,139 +112,140 @@ function Search() {
     localStorage.setItem("SearchKeyWord", e.target.value);
   }
 
-  function returnOriginal() {
-    setDataToDisplay(originalData);
-  }
+  // function returnOriginal() {
+  //   setDataToDisplay(originalData);
+  // }
 
-  function filter(e) {
-    switch (e.target.name) {
-      case "3. type":
-        if (e.target.value === "all") {
-          returnOriginal();
-          setTypeValue(e.target.value);
-          setRegionValue("");
-          setTimeZoneValue("");
-          setCurrencyValue("");
-          setMatchScoreValue("");
-        } else {
-          setTypeValue(e.target.value);
-          setRegionValue("");
-          setTimeZoneValue("");
-          setCurrencyValue("");
-          setMatchScoreValue("");
-          let typeData = originalData.filter((item) => {
-            return (
-              item[e.target.name].toLowerCase() === e.target.value.toLowerCase()
-            );
-          });
-          setDataToDisplay(typeData);
-        }
-        break;
-      case "4. region":
-        if (e.target.value === "all") {
-          returnOriginal();
-          setRegionValue(e.target.value);
-          setTypeValue("");
-          setTimeZoneValue("");
-          setCurrencyValue("");
-          setMatchScoreValue("");
-        } else {
-          setRegionValue(e.target.value);
-          setTypeValue("");
-          setTimeZoneValue("");
-          setCurrencyValue("");
-          setMatchScoreValue("");
-          let regionData = originalData.filter((item) => {
-            return (
-              item[e.target.name].toLowerCase() === e.target.value.toLowerCase()
-            );
-          });
-          setDataToDisplay(regionData);
-        }
-        break;
-      case "7. timezone":
-        if (e.target.value === "all") {
-          returnOriginal();
-          setTimeZoneValue(e.target.value);
-          setTypeValue("");
-          setRegionValue("");
-          setCurrencyValue("");
-          setMatchScoreValue("");
-        } else {
-          setTimeZoneValue(e.target.value);
-          setTypeValue("");
-          setRegionValue("");
-          setCurrencyValue("");
-          setMatchScoreValue("");
-          let regionData = originalData.filter((item) => {
-            return (
-              item[e.target.name].toLowerCase() === e.target.value.toLowerCase()
-            );
-          });
-          setDataToDisplay(regionData);
-        }
-        break;
-      case "8. currency":
-        if (e.target.value === "all") {
-          returnOriginal();
-          setCurrencyValue(e.target.value);
-          setTypeValue("");
-          setRegionValue("");
-          setTimeZoneValue("");
-          setMatchScoreValue("");
-        } else {
-          setCurrencyValue(e.target.value);
-          setTypeValue("");
-          setRegionValue("");
-          setTimeZoneValue("");
-          setMatchScoreValue("");
-          let regionData = originalData.filter((item) => {
-            return (
-              item[e.target.name].toLowerCase() === e.target.value.toLowerCase()
-            );
-          });
-          setDataToDisplay(regionData);
-        }
-        break;
-      case "9. matchScore":
-        if (e.target.value === "all") {
-          returnOriginal();
-          setMatchScoreValue(e.target.value);
-          setTypeValue("");
-          setRegionValue("");
-          setTimeZoneValue("");
-          setCurrencyValue("");
-        } else {
-          setMatchScoreValue(e.target.value);
-          setTypeValue("");
-          setRegionValue("");
-          setTimeZoneValue("");
-          setCurrencyValue("");
-          let regionData = originalData.filter((item) => {
-            return (
-              item[e.target.name].toLowerCase() === e.target.value.toLowerCase()
-            );
-          });
-          setDataToDisplay(regionData);
-        }
-        break;
-    }
-  }
+  // function filter(e) {
+  //   switch (e.target.name) {
+  //     case "3. type":
+  //       if (e.target.value === "all") {
+  //         returnOriginal();
+  //         setTypeValue(e.target.value);
+  //         setRegionValue("");
+  //         setTimeZoneValue("");
+  //         setCurrencyValue("");
+  //         setMatchScoreValue("");
+  //       } else {
+  //         setTypeValue(e.target.value);
+  //         setRegionValue("");
+  //         setTimeZoneValue("");
+  //         setCurrencyValue("");
+  //         setMatchScoreValue("");
+  //         let typeData = originalData.filter((item) => {
+  //           return (
+  //             item[e.target.name].toLowerCase() === e.target.value.toLowerCase()
+  //           );
+  //         });
+  //         setDataToDisplay(typeData);
+  //       }
+  //       break;
+  //     case "4. region":
+  //       if (e.target.value === "all") {
+  //         returnOriginal();
+  //         setRegionValue(e.target.value);
+  //         setTypeValue("");
+  //         setTimeZoneValue("");
+  //         setCurrencyValue("");
+  //         setMatchScoreValue("");
+  //       } else {
+  //         setRegionValue(e.target.value);
+  //         setTypeValue("");
+  //         setTimeZoneValue("");
+  //         setCurrencyValue("");
+  //         setMatchScoreValue("");
+  //         let regionData = originalData.filter((item) => {
+  //           return (
+  //             item[e.target.name].toLowerCase() === e.target.value.toLowerCase()
+  //           );
+  //         });
+  //         setDataToDisplay(regionData);
+  //       }
+  //       break;
+  //     case "7. timezone":
+  //       if (e.target.value === "all") {
+  //         returnOriginal();
+  //         setTimeZoneValue(e.target.value);
+  //         setTypeValue("");
+  //         setRegionValue("");
+  //         setCurrencyValue("");
+  //         setMatchScoreValue("");
+  //       } else {
+  //         setTimeZoneValue(e.target.value);
+  //         setTypeValue("");
+  //         setRegionValue("");
+  //         setCurrencyValue("");
+  //         setMatchScoreValue("");
+  //         let regionData = originalData.filter((item) => {
+  //           return (
+  //             item[e.target.name].toLowerCase() === e.target.value.toLowerCase()
+  //           );
+  //         });
+  //         setDataToDisplay(regionData);
+  //       }
+  //       break;
+  //     case "8. currency":
+  //       if (e.target.value === "all") {
+  //         returnOriginal();
+  //         setCurrencyValue(e.target.value);
+  //         setTypeValue("");
+  //         setRegionValue("");
+  //         setTimeZoneValue("");
+  //         setMatchScoreValue("");
+  //       } else {
+  //         setCurrencyValue(e.target.value);
+  //         setTypeValue("");
+  //         setRegionValue("");
+  //         setTimeZoneValue("");
+  //         setMatchScoreValue("");
+  //         let regionData = originalData.filter((item) => {
+  //           return (
+  //             item[e.target.name].toLowerCase() === e.target.value.toLowerCase()
+  //           );
+  //         });
+  //         setDataToDisplay(regionData);
+  //       }
+  //       break;
+  //     case "9. matchScore":
+  //       if (e.target.value === "all") {
+  //         returnOriginal();
+  //         setMatchScoreValue(e.target.value);
+  //         setTypeValue("");
+  //         setRegionValue("");
+  //         setTimeZoneValue("");
+  //         setCurrencyValue("");
+  //       } else {
+  //         setMatchScoreValue(e.target.value);
+  //         setTypeValue("");
+  //         setRegionValue("");
+  //         setTimeZoneValue("");
+  //         setCurrencyValue("");
+  //         let regionData = originalData.filter((item) => {
+  //           return (
+  //             item[e.target.name].toLowerCase() === e.target.value.toLowerCase()
+  //           );
+  //         });
+  //         setDataToDisplay(regionData);
+  //       }
+  //       break;
+  //     default: {
+  //       returnOriginal();
+  //     }
+  //   }
+  // }
 
-  function getUniqueValues(array, key) {
-    if (Array.isArray(array)) {
-      let unique = [...new Set(array.map((item) => item[key]))];
+  // function getUniqueValues(array, key) {
+  //   if (Array.isArray(array)) {
+  //     let unique = [...new Set(array.map((item) => item[key]))];
 
-      return unique;
-    }
-  }
-  function setLocaleValue() {
-    console.log("locale");
-  }
+  //     return unique;
+  //   }
+  // }
 
   return (
     <div className="search-window">
       <form
+        className="search-form"
         onSubmit={(event) => {
           event.preventDefault();
           setUrl(
@@ -202,7 +253,7 @@ function Search() {
           );
         }}
       >
-        <label>Input search keyword : </label>
+        <label>Input search keyword, e.g. ibm : </label>
         <input
           type="text"
           name="searchKeyword"
@@ -218,13 +269,18 @@ function Search() {
           <div>Loading...</div>
         ) : (
           <div className="result-list">
-            {dataToDisplay ? (
+            <div
+              className="ag-theme-balham"
+              style={{ width: "95%", height: 400 }}
+            >
+              <AgGridReact columnDefs={columnDefs} rowData={rowData} />
+            </div>
+            {/* {dataToDisplay ? (
               <div>
-                {/* <form> */}
+
                 <p>Filter menu</p>
                 <select
                   value={typeValue}
-                  id="type"
                   name="3. type"
                   onChange={(e) => filter(e)}
                 >
@@ -312,27 +368,24 @@ function Search() {
                     )
                   )}
                 </select>
-                {/* </form> */}
+
                 <div className="dataTable">
                   {dataToDisplay &&
                     dataToDisplay.map((item) => (
-                      // <div key={item["1. symbol"]}>
                       <Link
                         key={item["1. symbol"]}
                         className="link"
                         to={`search/${item["1. symbol"]}`}
-                        onClick={() => setLocaleValue()}
                       >
                         {item["1. symbol"]} : {item["2. name"]} :
                         {item["3. type"]} : {item["4. region"]}
                       </Link>
-                      // </div>
                     ))}
                 </div>
               </div>
             ) : (
-              <div>no data yet </div>
-            )}
+              <div></div>
+            )} */}
           </div>
         )}
       </div>
