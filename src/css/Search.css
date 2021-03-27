@@ -1,8 +1,3 @@
-#type {
-  border-radius: 5px;
-  outline: none;
-}
-
 .dataTable {
   height: 80vh;
   display: flex;
@@ -14,21 +9,15 @@
   padding: 1rem;
   /* color: black; */
 }
-.link:hover {
+
+.search-form {
+  padding-top: 2rem;
 }
 
-.dataTable:first-child {
-  background-color: green;
-}
-
-.meta-data {
-  border: 2px solid green;
-}
-
-.time-series {
-  border: 2px solid purple;
-}
-
-.item-details {
-  border: 2px solid red;
+.result-list {
+  padding-top: 2rem;
+  /* height: 80vh; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
