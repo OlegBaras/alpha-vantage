@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import history from "../components/History";
 import "../css/LandingPage.css";
+import { randomStringGenerator } from "../components/randomStringGenerator";
 
 function LandingPage() {
   const [apiKey, setApiKey] = useState("");
@@ -16,14 +17,18 @@ function LandingPage() {
     localStorage.setItem("SearchKeyWord", "");
     history.push("search");
   }
+  const generateRandom = () => {
+    console.log("random");
+    let randomSymbol = randomStringGenerator(10);
+    localStorage.setItem("apiKey", randomSymbol);
+    localStorage.setItem("SearchKeyWord", "");
+    history.push("search");
+    console.log(randomSymbol);
+  };
 
   return (
     <div className="landing-page">
       {/* <form> */}
-      <div className="landing-title">
-        <h1>Landing Page</h1>
-      </div>
-
       <div className="landing-content">
         <h2>Input API Key:</h2>
         <input
@@ -40,6 +45,9 @@ function LandingPage() {
           Submit
         </button>
         {/* </form> */}
+      </div>
+      <div className="example-key">
+        <button onClick={() => generateRandom()}>or use example key</button>
       </div>
     </div>
   );
