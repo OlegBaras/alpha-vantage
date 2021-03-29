@@ -4,6 +4,7 @@
   align-items: center;
 }
 
-.landing-content {
-  padding-top: 20%;
+.example-key {
+  width: 200px;
+  padding-top: 1rem;
 }
