@@ -164,6 +164,7 @@
   }
 
   .landing-page {
+    height: 80vh;
     justify-content: flex-start;
     overflow: hidden;
   }
