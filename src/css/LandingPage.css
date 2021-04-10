@@ -12,7 +12,7 @@
   display: flex;
   justify-content: center;
   color: #595f6e;
-  padding-bottom: 100px;
+  /* padding-bottom: 100px; */
   text-align: center;
 }
 
@@ -156,4 +156,18 @@
   color: #5fa8d3;
   background: #595f6e;
   cursor: pointer;
+}
+
+@media only screen and (max-width: 600px) {
+  body {
+    /* background-color: lightblue; */
+  }
+
+  .landing-page {
+    justify-content: flex-start;
+  }
+
+  .title {
+    margin-top: 5rem;
+  }
 }
