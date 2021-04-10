@@ -7,6 +7,7 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-balham.css";
 import history from "../components/History";
+import Nav from "../components/Nav";
 
 function Search() {
   const API_KEY = localStorage.getItem("apiKey");
@@ -121,6 +122,7 @@ function Search() {
 
   return (
     <div className="search-window">
+      <Nav />
       <form
         className="search-form"
         onSubmit={(event) => {
