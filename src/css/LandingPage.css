@@ -165,6 +165,7 @@
 
   .landing-page {
     justify-content: flex-start;
+    overflow: hidden;
   }
 
   .title {
