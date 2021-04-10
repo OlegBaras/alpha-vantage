@@ -1,76 +1,110 @@
-import React, { useState, useEffect } from "react";
-import "../App.css";
-import axios from "axios";
+import React, { useState } from "react";
+import Intraday from "./ItemDetails/Intraday";
+import Daily from "./ItemDetails/Daily";
+import Weekly from "./ItemDetails/Weekly";
+import Monthly from "./ItemDetails/Monthly";
+import Quote from "./ItemDetails/Quote";
+import IndicatorEMA from "./ItemDetails/Indicators/IndicatorEMA";
+import IndicatorSMA from "./ItemDetails/Indicators/IndicatorSMA";
+import IndicatorVWAP from "./ItemDetails/Indicators/IndicatorVWAP";
+import IndicatorBBANDS from "./ItemDetails/Indicators/IndicatorBBANDS";
+import IndicatorSTOCH from "./ItemDetails/Indicators/IndicatorSTOCH";
+import { useHistory } from "react-router-dom";
 
 function ItemDetail({ match }) {
-  const API_KEY = localStorage.getItem("apiKey");
-  // const [item, setItem] = useState({});
-  const [metaData, setMetaData] = useState({});
-  const [timeSeries, setTimeSeries] = useState({});
+  const [value, setValue] = useState([]);
+  const [indicatorValue, setIndicatorValue] = useState("");
+  const company = match.params.id;
+  const history = useHistory();
+  /* Button Handler*/
+  function handleClick(e) {
+    setValue(e.target.value);
+    setIndicatorValue("");
+  }
+  /* Indicators Select Handler*/
+  function handleIndicator(e) {
+    setIndicatorValue(e.target.value);
+    setValue("");
+  }
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-
-  useEffect(() => {
-    const fetchItem = async () => {
-      setIsError(false);
-      setIsLoading(true);
-      try {
-        const result = await axios(
-          `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${match.params.id}&apikey=${API_KEY}`
-        );
-        //setItem(result.data);
-        setMetaData(result.data["Meta Data"]);
-        setTimeSeries(result.data["Time Series (Daily)"]);
-        const metaData = result.data["Meta Data"];
-        //const timeSeries = result.data["Time Series (Daily)"];
-
-        Object.keys(metaData).map(function (key, index) {
-          //console.log(metaData);
-          // console.log(metaData[key]);
-        });
-      } catch (error) {
-        setIsError(true);
-      }
-      setIsLoading(false);
-    };
-    fetchItem();
-  }, []);
   return (
     <div>
-      {isError && <div>Something went wrong..</div>}
-      {isLoading ? (
-        <div>Loading...</div>
-      ) : (
-        <div>
-          {match.params.id}
-          {metaData ? (
-            Object.keys(metaData).map(function (key, index) {
-              return (
-                <div key={index}>
-                  {key} : {metaData[key]}
-                </div>
-              );
-            })
-          ) : (
-            <></>
-          )}
-          {timeSeries ? (
-            Object.keys(timeSeries).map(function (key, index) {
-              return (
-                <div key={index}>
-                  {key} : open : {timeSeries[key]["1. open"]}
-                  {key} : close : {timeSeries[key]["4. close"]}
-                </div>
-              );
-            })
-          ) : (
-            <></>
-          )}
-        </div>
+      <button onClick={() => history.goBack()}>Go Back</button>
+      <h1>{match.params.id}</h1>
+      <h3>Please select one of the options to display data</h3>
+      <div>
+        <button value="TIME_SERIES_INTRADAY" onClick={(e) => handleClick(e)}>
+          Intraday 5min
+        </button>
+        <button value="TIME_SERIES_DAILY" onClick={(e) => handleClick(e)}>
+          Daily
+        </button>
+        <button value="TIME_SERIES_WEEKLY" onClick={(e) => handleClick(e)}>
+          Weekly
+        </button>
+        <button value="TIME_SERIES_MONTHLY" onClick={(e) => handleClick(e)}>
+          Monthly
+        </button>
+        <button value="GLOBAL_QUOTE" onClick={(e) => handleClick(e)}>
+          Quote
+        </button>
+
+        <select
+          value={indicatorValue}
+          id="Indicators"
+          name="Indicators"
+          onChange={(e) => handleIndicator(e)}
+        >
+          <option key="default" value="" disabled hidden>
+            Select Indicator
+          </option>
+          <option key="sma" value="SMA">
+            SMA
+          </option>
+          <option key="ema" value="EMA">
+            EMA
+          </option>
+          <option key="vwap" value="VWAP">
+            VWAP
+          </option>
+          <option key="stoch" value="STOCH">
+            STOCH
+          </option>
+          <option key="bbands" value="BBANDS">
+            BBANDS
+          </option>
+        </select>
+      </div>
+
+      {value === "TIME_SERIES_INTRADAY" && (
+        <Intraday company={company} value={value} />
+      )}
+      {value === "TIME_SERIES_DAILY" && (
+        <Daily company={company} value={value} />
+      )}
+      {value === "TIME_SERIES_WEEKLY" && (
+        <Weekly company={company} value={value} />
+      )}
+      {value === "TIME_SERIES_MONTHLY" && (
+        <Monthly company={company} value={value} />
+      )}
+      {value === "GLOBAL_QUOTE" && <Quote company={company} value={value} />}
+      {indicatorValue === "EMA" && (
+        <IndicatorEMA company={company} value={indicatorValue} />
+      )}
+      {indicatorValue === "SMA" && (
+        <IndicatorSMA company={company} value={indicatorValue} />
+      )}
+      {indicatorValue === "VWAP" && (
+        <IndicatorVWAP company={company} value={indicatorValue} />
+      )}
+      {indicatorValue === "STOCH" && (
+        <IndicatorSTOCH company={company} value={indicatorValue} />
+      )}
+      {indicatorValue === "BBANDS" && (
+        <IndicatorBBANDS company={company} value={indicatorValue} />
       )}
     </div>
   );
 }
-
 export default ItemDetail;

@@ -1,0 +1,23 @@
+.dataTable {
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 1rem;
+}
+.link {
+  padding: 1rem;
+  /* color: black; */
+}
+
+.search-form {
+  padding-top: 2rem;
+}
+
+.result-list {
+  padding-top: 2rem;
+  /* height: 80vh; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
