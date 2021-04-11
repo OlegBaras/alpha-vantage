@@ -1,19 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "../App.css";
+import "../css/Nav.css";
 
 function Nav() {
-  const navStyle = {
-    color: "white",
-  };
   return (
     <nav>
       <h3>Alpha Vantage API</h3>
       <ul className="nav-links">
-        <Link style={navStyle} to="/">
+        <Link className="nav-link-item" to="/">
           <li>Home</li>
         </Link>
-        <Link style={navStyle} to="/search">
+        <Link className="nav-link-item" to="/search">
           <li>Search</li>
         </Link>
       </ul>
