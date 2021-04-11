@@ -20,6 +20,7 @@ function Search() {
 
   const columnDefs = [
     {
+      resizable: true,
       headerName: "Symbol",
       field: "symbol",
       sortable: true,
@@ -27,6 +28,8 @@ function Search() {
       width: 100,
     },
     {
+      resizable: true,
+
       headerName: "Name",
       field: "name",
       sortable: true,
@@ -34,6 +37,8 @@ function Search() {
       width: 300,
     },
     {
+      resizable: true,
+
       headerName: "Type",
       field: "type",
       sortable: true,
@@ -41,6 +46,8 @@ function Search() {
       width: 100,
     },
     {
+      resizable: true,
+
       headerName: "Region",
       field: "region",
       sortable: true,
@@ -48,27 +55,46 @@ function Search() {
       width: 200,
     },
     {
+      resizable: true,
+
       headerName: "Market Open",
       field: "marketOpen",
       sortable: true,
       filter: true,
     },
     {
+      resizable: true,
+
       headerName: "Market Close",
       field: "marketClose",
       sortable: true,
       filter: true,
     },
-    { headerName: "Timezona", field: "timezone", sortable: true, filter: true },
-    { headerName: "Currency", field: "currency", sortable: true, filter: true },
     {
+      resizable: true,
+      headerName: "Timezone",
+      field: "timezone",
+      sortable: true,
+      filter: true,
+    },
+    {
+      resizable: true,
+      headerName: "Currency",
+      field: "currency",
+      sortable: true,
+      filter: true,
+    },
+    {
+      resizable: true,
+
       headerName: "MatchScore",
       field: "matchScore",
       sortable: true,
       filter: true,
     },
   ];
-  const [rowData, setRowData] = useState([]);
+  const [GridApi, setGridApi] = useState();
+  const [rowData, setRowData] = useState(null);
   const renameKey = (obj, oldKey, newKey) => {
     obj[newKey] = obj[oldKey];
     delete obj[oldKey];
@@ -120,46 +146,85 @@ function Search() {
     localStorage.setItem("SearchKeyWord", e.target.value);
   }
 
+  function handleSubmit(e) {
+    console.log("submit it");
+    e.preventDefault();
+    setUrl(
+      `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchKeyWord}&apikey=${API_KEY}`
+    );
+  }
+
+  function gridReadyHandler(params) {
+    console.log("grid is ready");
+
+    console.log(params);
+  }
+
   return (
     <div className="search-window">
       <Nav />
-      <form
-        className="search-form"
-        onSubmit={(event) => {
-          event.preventDefault();
-          setUrl(
-            `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchKeyWord}&apikey=${API_KEY}`
-          );
-        }}
-      >
-        <label>Input search keyword, e.g. ibm : </label>
-        <input
-          type="text"
-          name="searchKeyword"
-          value={searchKeyWord}
-          onChange={setSearchV}
-          placeholder="Input search..."
-        />
-        <button type="submit">Search</button>
-      </form>
-      <div>
-        {isError && <div>Something went wrong...</div>}
-        {isLoading ? (
-          <div>Loading...</div>
-        ) : (
-          <div className="result-list">
-            <div
-              className="ag-theme-balham"
-              style={{ width: "95%", height: 400 }}
-            >
-              <AgGridReact
-                columnDefs={columnDefs}
-                rowData={rowData}
-                onCellClicked={() => history.push(`/search/${searchKeyWord}`)}
-              />
+      <div className="root">
+        <div className="form">
+          <input
+            type="text"
+            name="searchKeyword"
+            value={searchKeyWord}
+            onChange={setSearchV}
+            // onKeyDown={handleKeyDown}
+            autoComplete="off"
+            required
+          />
+          <label for="API_KEY" className="label-name">
+            <span className="content-name">INPUT Search Symbol, i.e. ibm</span>
+          </label>
+          <button
+            disabled={searchKeyWord.length < 1}
+            type="submit"
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
+        </div>
+        {/* <div className="search-bar">
+        <form
+          className="search-form"
+          onSubmit={(event) => {
+            event.preventDefault();
+            setUrl(
+              `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchKeyWord}&apikey=${API_KEY}`
+            );
+          }}
+        >
+          <label>Input search keyword, e.g. ibm : </label>
+          <input
+            type="text"
+            name="searchKeyword"
+            value={searchKeyWord}
+            onChange={setSearchV}
+            placeholder="Input search..."
+          />
+          <button type="submit">Search</button>
+        </form>
+      </div> */}
+        <div className="table">
+          {isError && <div>Something went wrong...</div>}
+          {isLoading && <div className="loading">Loading...</div>}
+          {rowData && (
+            <div className="result-list">
+              <div
+                className="ag-theme-balham"
+                style={{ width: "95%", height: 330 }}
+              >
+                <AgGridReact
+                  onGridReady={gridReadyHandler}
+                  columnDefs={columnDefs}
+                  rowData={rowData}
+                  onCellClicked={() => history.push(`/search/${searchKeyWord}`)}
+                />
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

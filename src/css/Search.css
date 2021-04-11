@@ -1,3 +1,9 @@
+.root {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
 .dataTable {
   height: 80vh;
   display: flex;
@@ -10,8 +16,21 @@
   /* color: black; */
 }
 
-.search-form {
-  padding-top: 2rem;
+.search-bar {
+  border: 2px solid red;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form {
+  display: flex;
+  justify-content: center;
+  width: 25%;
+  overflow: hidden;
+  /* display: flex; */
+  /* flex-direction: column; */
 }
 
 .result-list {
@@ -20,4 +39,35 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.table {
+  width: 100%;
+}
+
+.form button {
+  position: absolute;
+  right: 0px;
+  bottom: 3px;
+  color: #5fa8d3;
+  background: white;
+  border: none;
+  cursor: pointer;
+}
+
+.form button:disabled:hover {
+  color: white;
+  cursor: text;
+  background: transparent;
+}
+.form button:focus {
+  outline: none;
+}
+.form button:hover {
+  color: #595f6e;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
 }
