@@ -14,6 +14,7 @@ import Nav from "./Nav";
 import "../css/ItemDetails.css";
 
 function ItemDetail({ match }) {
+  console.log(match.params.id.toUpperCase());
   const [value, setValue] = useState([]);
   const [indicatorValue, setIndicatorValue] = useState("");
   const company = match.params.id;
@@ -40,8 +41,8 @@ function ItemDetail({ match }) {
         <div className="content-header">
           <div>
             <div className="details-title">
-              <h1>Selected Company : {match.params.id}</h1>
-              <h3>Please select one of the options to display data</h3>
+              <h1>Selected Company : {match.params.id.toUpperCase()}</h1>
+              <h3>Please select one of the options to display the data</h3>
             </div>
 
             <button
