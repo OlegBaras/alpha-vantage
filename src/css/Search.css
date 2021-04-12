@@ -13,7 +13,6 @@
 }
 .link {
   padding: 1rem;
-  /* color: black; */
 }
 
 .search-bar {
@@ -67,4 +66,8 @@
 .loading {
   display: flex;
   justify-content: center;
+}
+
+.ag-theme-balham .ag-row-hover {
+  cursor: pointer;
 }

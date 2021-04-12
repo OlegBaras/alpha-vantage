@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import "../App.css";
 import "../css/Search.css";
@@ -18,83 +17,55 @@ function Search() {
     `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchKeyWord}&apikey=${API_KEY}`
   );
 
+  const defaultColdDef = {
+    flex: 1,
+    sortable: true,
+    filter: true,
+    resizable: true,
+  };
+
   const columnDefs = [
     {
-      resizable: true,
       headerName: "Symbol",
       field: "symbol",
-      sortable: true,
-      filter: true,
-      width: 100,
     },
     {
-      resizable: true,
-
       headerName: "Name",
       field: "name",
-      sortable: true,
-      filter: true,
-      width: 300,
     },
     {
-      resizable: true,
-
       headerName: "Type",
       field: "type",
-      sortable: true,
-      filter: true,
-      width: 100,
     },
     {
-      resizable: true,
-
       headerName: "Region",
       field: "region",
-      sortable: true,
-      filter: true,
-      width: 200,
     },
     {
-      resizable: true,
-
       headerName: "Market Open",
       field: "marketOpen",
-      sortable: true,
-      filter: true,
     },
     {
-      resizable: true,
-
       headerName: "Market Close",
       field: "marketClose",
-      sortable: true,
-      filter: true,
     },
     {
-      resizable: true,
       headerName: "Timezone",
       field: "timezone",
-      sortable: true,
-      filter: true,
     },
     {
-      resizable: true,
       headerName: "Currency",
       field: "currency",
-      sortable: true,
-      filter: true,
     },
     {
-      resizable: true,
-
       headerName: "MatchScore",
       field: "matchScore",
-      sortable: true,
-      filter: true,
     },
   ];
-  const [GridApi, setGridApi] = useState();
+  const [gridApi, setGridApi] = useState();
+  const [gridColumnApi, setGridColumnApi] = useState();
   const [rowData, setRowData] = useState(null);
+
   const renameKey = (obj, oldKey, newKey) => {
     obj[newKey] = obj[oldKey];
     delete obj[oldKey];
@@ -145,14 +116,14 @@ function Search() {
     setSearchKeyWord(e.target.value);
     localStorage.setItem("SearchKeyWord", e.target.value);
   }
-
+  // Submit handler
   function handleSubmit(e) {
     e.preventDefault();
     setUrl(
       `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchKeyWord}&apikey=${API_KEY}`
     );
   }
-
+  // On "Enter" key press
   function handleKeyDown(e) {
     if (e.key === "Enter") {
       if (searchKeyWord.length > 0) {
@@ -166,7 +137,10 @@ function Search() {
     }
   }
 
-  function gridReadyHandler(params) {}
+  function gridReadyHandler(params) {
+    setGridApi(params.api);
+    setGridColumnApi(params.columnApi);
+  }
 
   return (
     <div className="search-window">
@@ -203,11 +177,12 @@ function Search() {
                 style={{ width: "80%", height: 315 }}
               >
                 <AgGridReact
+                  // rowStyle={rowStyle}
                   onGridReady={gridReadyHandler}
                   columnDefs={columnDefs}
                   rowData={rowData}
                   onCellClicked={() => history.push(`/search/${searchKeyWord}`)}
-                  defaultColDef={{ flex: 1 }}
+                  defaultColDef={defaultColdDef}
                 />
               </div>
             </div>
