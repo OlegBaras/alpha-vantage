@@ -207,7 +207,7 @@ function Search() {
                   columnDefs={columnDefs}
                   rowData={rowData}
                   onCellClicked={() => history.push(`/search/${searchKeyWord}`)}
-                  defaultColDef={{ flex: "1 1 auto" }}
+                  defaultColDef={{ flex: 1 }}
                 />
               </div>
             </div>
