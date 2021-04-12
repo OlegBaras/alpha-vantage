@@ -193,27 +193,6 @@ function Search() {
             Submit
           </button>
         </div>
-        {/* <div className="search-bar">
-        <form
-          className="search-form"
-          onSubmit={(event) => {
-            event.preventDefault();
-            setUrl(
-              `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchKeyWord}&apikey=${API_KEY}`
-            );
-          }}
-        >
-          <label>Input search keyword, e.g. ibm : </label>
-          <input
-            type="text"
-            name="searchKeyword"
-            value={searchKeyWord}
-            onChange={setSearchV}
-            placeholder="Input search..."
-          />
-          <button type="submit">Search</button>
-        </form>
-      </div> */}
         <div className="table">
           {isError && <div>Something went wrong...</div>}
           {isLoading && <div className="loading">Loading...</div>}
@@ -221,13 +200,14 @@ function Search() {
             <div className="result-list">
               <div
                 className="ag-theme-balham"
-                style={{ width: "95%", height: 330 }}
+                style={{ width: "80%", height: 315 }}
               >
                 <AgGridReact
                   onGridReady={gridReadyHandler}
                   columnDefs={columnDefs}
                   rowData={rowData}
                   onCellClicked={() => history.push(`/search/${searchKeyWord}`)}
+                  defaultColDef={{ flex: 1 }}
                 />
               </div>
             </div>

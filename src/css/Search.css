@@ -29,13 +29,10 @@
   justify-content: center;
   width: 25%;
   overflow: hidden;
-  /* display: flex; */
-  /* flex-direction: column; */
 }
 
 .result-list {
   padding-top: 2rem;
-  /* height: 80vh; */
   display: flex;
   justify-content: center;
   align-items: center;
