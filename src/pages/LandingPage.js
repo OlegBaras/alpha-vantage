@@ -51,7 +51,7 @@ function LandingPage() {
         />
         <label for="API_KEY" className="label-name">
           <span className="content-name">
-            INPUT API KEY (minimum 5 characters)
+            Enter API KEY (minimum 5 characters)
           </span>
         </label>
         <button

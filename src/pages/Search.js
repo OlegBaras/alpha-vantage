@@ -147,18 +147,26 @@ function Search() {
   }
 
   function handleSubmit(e) {
-    console.log("submit it");
     e.preventDefault();
     setUrl(
       `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchKeyWord}&apikey=${API_KEY}`
     );
   }
 
-  function gridReadyHandler(params) {
-    console.log("grid is ready");
-
-    console.log(params);
+  function handleKeyDown(e) {
+    if (e.key === "Enter") {
+      if (searchKeyWord.length > 0) {
+        e.preventDefault();
+        setUrl(
+          `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchKeyWord}&apikey=${API_KEY}`
+        );
+      } else {
+        return;
+      }
+    }
   }
+
+  function gridReadyHandler(params) {}
 
   return (
     <div className="search-window">
@@ -170,12 +178,12 @@ function Search() {
             name="searchKeyword"
             value={searchKeyWord}
             onChange={setSearchV}
-            // onKeyDown={handleKeyDown}
+            onKeyDown={handleKeyDown}
             autoComplete="off"
             required
           />
           <label for="API_KEY" className="label-name">
-            <span className="content-name">INPUT Search Symbol, i.e. ibm</span>
+            <span className="content-name">Enter Search Symbol, i.e. ibm</span>
           </label>
           <button
             disabled={searchKeyWord.length < 1}
