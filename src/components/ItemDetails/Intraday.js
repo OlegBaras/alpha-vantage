@@ -76,7 +76,7 @@ export default function Intraday({ company, value }) {
         );
         setMetaData(result.data["Meta Data"]);
         setTimeSeries(result.data["Time Series (5min)"]);
-        setNote(result.data.Note);
+        // setNote(result.data.Note);
         console.log(result.data);
       } catch (error) {
         setIsError(true);
