@@ -11,7 +11,11 @@ export default function Intraday({ company, value }) {
   const [metaData, setMetaData] = useState({});
   const [timeSeries, setTimeSeries] = useState({});
   const [note, setNote] = useState();
-
+  const [gridApi, setGridApi] = useState();
+  const [gridColumnApi, setGridColumnApi] = useState();
+  const [url, setUrl] = useState(
+    `https://www.alphavantage.co/query?function=${value}&symbol=${company}&interval=5min&apikey=${API_KEY}`
+  );
   const defaultColDef = {
     flex: 1,
     sortable: true,
@@ -57,8 +61,6 @@ export default function Intraday({ company, value }) {
       field: "matchScore",
     },
   ];
-  const [gridApi, setGridApi] = useState();
-  const [gridColumnApi, setGridColumnApi] = useState();
 
   const renameKey = (obj, oldKey, newKey) => {
     obj[newKey] = obj[oldKey];
@@ -69,15 +71,17 @@ export default function Intraday({ company, value }) {
     const fetchItem = async () => {
       setIsError(false);
       setIsLoading(true);
-
       try {
-        const result = await axios(
-          `https://www.alphavantage.co/query?function=${value}&symbol=${company}&interval=5min&apikey=${API_KEY}`
-        );
-        setMetaData(result.data["Meta Data"]);
-        setTimeSeries(result.data["Time Series (5min)"]);
-        // setNote(result.data.Note);
-        console.log(result.data);
+        const result = await axios(url);
+        console.log(result);
+        if (result.data && result.data["Note"]) {
+          setNote(result.data["Note"]);
+          console.log("note");
+        } else {
+          setMetaData(result.data["Meta Data"]);
+          setTimeSeries(result.data["Time Series (5min)"]);
+          console.log("all data");
+        }
       } catch (error) {
         setIsError(true);
       }
@@ -86,44 +90,53 @@ export default function Intraday({ company, value }) {
     fetchItem();
   }, []);
 
+  if (note) {
+    return (
+      <div>
+        You have used API calls limit, please wait a minute and refresh to
+        continue.
+      </div>
+    );
+  }
+  if (isError) {
+    return <div> Something went wrong</div>;
+  }
+
+  if (isLoading) {
+    return <div>Loading....</div>;
+  }
+
   return (
     <div>
-      {note && <div>{note}</div>}
-      <p>{company}</p> <p>{value}</p>
-      {isError && <div>Something went wrong </div>}
-      {isLoading ? (
-        <div> Loading...</div>
-      ) : (
+      <div>
         <div>
-          <div>
-            {metaData ? (
-              Object.keys(metaData).map(function (key, index) {
-                return (
-                  <div key={index}>
-                    {key} : {metaData[key]}
-                  </div>
-                );
-              })
-            ) : (
-              <>no meta data</>
-            )}
-          </div>
-          <div className="time-series">
-            {timeSeries ? (
-              Object.keys(timeSeries).map(function (key, index) {
-                return (
-                  <div key={index}>
-                    {key} : open : {timeSeries[key]["1. open"]}
-                    {key} : close : {timeSeries[key]["4. close"]}
-                  </div>
-                );
-              })
-            ) : (
-              <>no time series data</>
-            )}
-          </div>
+          {metaData ? (
+            Object.keys(metaData).map(function (key, index) {
+              return (
+                <div key={index}>
+                  {key} : {metaData[key]}
+                </div>
+              );
+            })
+          ) : (
+            <>no meta data</>
+          )}
         </div>
-      )}
+        <div className="time-series">
+          {timeSeries ? (
+            Object.keys(timeSeries).map(function (key, index) {
+              return (
+                <div key={index}>
+                  {key} : open : {timeSeries[key]["1. open"]}
+                  {key} : close : {timeSeries[key]["4. close"]}
+                </div>
+              );
+            })
+          ) : (
+            <>no time series data</>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
