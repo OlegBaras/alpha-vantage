@@ -16,6 +16,9 @@ function Search() {
   const [url, setUrl] = useState(
     `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchKeyWord}&apikey=${API_KEY}`
   );
+  const [gridApi, setGridApi] = useState();
+  const [gridColumnApi, setGridColumnApi] = useState();
+  const [rowData, setRowData] = useState(null);
 
   const defaultColdDef = {
     flex: 1,
@@ -62,54 +65,55 @@ function Search() {
       field: "matchScore",
     },
   ];
-  const [gridApi, setGridApi] = useState();
-  const [gridColumnApi, setGridColumnApi] = useState();
-  const [rowData, setRowData] = useState(null);
 
   const renameKey = (obj, oldKey, newKey) => {
     obj[newKey] = obj[oldKey];
     delete obj[oldKey];
   };
   useEffect(() => {
-    const fetchItems = async () => {
-      setIsError(false);
-      setIsLoading(true);
+    if (searchKeyWord) {
+      const fetchItems = async () => {
+        setIsError(false);
+        setIsLoading(true);
 
-      if (localStorage.getItem("SearchKeyWord")) {
-        setSearchKeyWord(localStorage.getItem("SearchKeyWord"));
-      }
-
-      try {
-        const result = await axios(
-          `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchKeyWord}&apikey=${API_KEY}`
-        );
-        if (result.data.bestMatches) {
-          const arr = result.data.bestMatches;
-          arr.forEach((obj) => {
-            renameKey(obj, "1. symbol", "symbol");
-            renameKey(obj, "2. name", "name");
-            renameKey(obj, "3. type", "type");
-            renameKey(obj, "4. region", "region");
-            renameKey(obj, "5. marketOpen", "marketOpen");
-            renameKey(obj, "6. marketClose", "marketClose");
-            renameKey(obj, "7. timezone", "timezone");
-            renameKey(obj, "8. currency", "currency");
-            renameKey(obj, "9. matchScore", "matchScore");
-          });
-          const updatedJson = arr;
-          setRowData(updatedJson);
-        } else {
-          setRowData([]);
+        if (localStorage.getItem("SearchKeyWord")) {
+          setSearchKeyWord(localStorage.getItem("SearchKeyWord"));
         }
-        setRowData(result.data.bestMatches);
-      } catch (error) {
-        setIsError(true);
-      }
-      console.log(rowData);
-      setIsLoading(false);
-    };
-    fetchItems();
-    setUrl("");
+
+        try {
+          const result = await axios(
+            `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchKeyWord}&apikey=${API_KEY}`
+          );
+          if (result.data.bestMatches) {
+            const arr = result.data.bestMatches;
+
+            arr.forEach((obj) => {
+              renameKey(obj, "1. symbol", "symbol");
+              renameKey(obj, "2. name", "name");
+              renameKey(obj, "3. type", "type");
+              renameKey(obj, "4. region", "region");
+              renameKey(obj, "5. marketOpen", "marketOpen");
+              renameKey(obj, "6. marketClose", "marketClose");
+              renameKey(obj, "7. timezone", "timezone");
+              renameKey(obj, "8. currency", "currency");
+              renameKey(obj, "9. matchScore", "matchScore");
+            });
+            const updatedJson = arr;
+            setRowData(updatedJson);
+          } else {
+            setRowData([]);
+          }
+          setRowData(result.data.bestMatches);
+        } catch (error) {
+          setIsError(true);
+        }
+        setIsLoading(false);
+      };
+      fetchItems();
+      setUrl("");
+    } else {
+      return;
+    }
   }, [url]);
 
   function setSearchV(e) {
@@ -156,7 +160,7 @@ function Search() {
             autoComplete="off"
             required
           />
-          <label for="API_KEY" className="label-name">
+          <label htmlFor="API_KEY" className="label-name">
             <span className="content-name">Enter Search Symbol, i.e. ibm</span>
           </label>
           <button

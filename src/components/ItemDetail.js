@@ -14,7 +14,6 @@ import Nav from "./Nav";
 import "../css/ItemDetails.css";
 
 function ItemDetail({ match }) {
-  console.log(match.params.id.toUpperCase());
   const [value, setValue] = useState([]);
   const [indicatorValue, setIndicatorValue] = useState("");
   const company = match.params.id;
@@ -41,8 +40,8 @@ function ItemDetail({ match }) {
         <div className="content-header">
           <div>
             <div className="details-title">
-              <h1>Selected Company : {match.params.id.toUpperCase()}</h1>
-              <h3>Please select one of the options to display the data</h3>
+              <h1>{match.params.id.toUpperCase()}</h1>
+              <h3>Click one of the options to display the data</h3>
             </div>
 
             <button
@@ -80,8 +79,8 @@ function ItemDetail({ match }) {
             >
               Quote
             </button>
-
-            <select
+            {/* restore and finish AG grid for the select element below */}
+            {/* <select
               className={"options-select"}
               value={indicatorValue}
               id="Indicators"
@@ -106,7 +105,7 @@ function ItemDetail({ match }) {
               <option key="bbands" value="BBANDS">
                 BBANDS
               </option>
-            </select>
+            </select> */}
           </div>
         </div>
         <div className="content-table">
