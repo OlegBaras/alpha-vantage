@@ -49,7 +49,7 @@ function LandingPage() {
           autoComplete="off"
           required
         />
-        <label for="API_KEY" className="label-name">
+        <label htmlFor="API_KEY" className="label-name">
           <span className="content-name">
             Enter API KEY (minimum 5 characters)
           </span>

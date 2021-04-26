@@ -86,7 +86,6 @@ function Search() {
           );
           if (result.data.bestMatches) {
             const arr = result.data.bestMatches;
-            //console.log(result);
 
             arr.forEach((obj) => {
               renameKey(obj, "1. symbol", "symbol");
@@ -108,7 +107,6 @@ function Search() {
         } catch (error) {
           setIsError(true);
         }
-        // console.log(rowData);
         setIsLoading(false);
       };
       fetchItems();
@@ -144,7 +142,6 @@ function Search() {
   }
 
   function gridReadyHandler(params) {
-    console.log("rowData", rowData);
     setGridApi(params.api);
     setGridColumnApi(params.columnApi);
   }

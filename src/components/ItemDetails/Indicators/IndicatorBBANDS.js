@@ -15,8 +15,7 @@ function IndicatorBBANDS({ company, value }) {
 
       try {
         const result = await axios(
-          `https://www.alphavantage.co/query?function=${value}&symbol=${company}&interval=weekly&time_period=5&series_type=close&nbdevup=3&nbdevdn=3&apikey=${API_KEY}`,
-          { timeout: 2000 }
+          `https://www.alphavantage.co/query?function=${value}&symbol=${company}&interval=weekly&time_period=5&series_type=close&nbdevup=3&nbdevdn=3&apikey=${API_KEY}`
         );
         setMetaData(result.data["Meta Data"]);
         setTimeSeries(result.data["Technical Analysis: BBANDS"]);
