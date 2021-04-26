@@ -59,7 +59,7 @@ export default function Daily({ company, value }) {
         );
         if (result.data["Note"]) {
           setNote(result.data["Note"]);
-          console.log("noteeeeee");
+
           setRowData([]);
         } else {
           const obj = result.data["Time Series (Daily)"];
@@ -74,7 +74,6 @@ export default function Daily({ company, value }) {
             renameKey(obj, "4. close", "close");
             renameKey(obj, "5. volume", "volume");
           });
-          console.log("myData", myData);
 
           const updatedJson = myData;
 
@@ -113,8 +112,6 @@ export default function Daily({ company, value }) {
   return (
     <div>
       <div className="table">
-        {/* {isError && <div>Something went wrong...</div>} */}
-        {/* {isLoading && <div className="loading">Loading...</div>} */}
         {rowData && (
           <div className="result-list">
             <div

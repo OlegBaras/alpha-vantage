@@ -63,15 +63,10 @@ export default function Intraday({ company, value }) {
         );
         if (result.data["Note"]) {
           setNote(result.data["Note"]);
-          console.log("note");
+
           setRowData([]);
         } else {
           const obj = result.data["Global Quote"];
-          console.log(obj);
-
-          // const myData = Object.keys(obj).map((key) => {
-          //   return obj[key];
-          // });
           const myData = [];
           myData.push(obj);
           console.log(myData);

@@ -59,7 +59,7 @@ export default function Intraday({ company, value }) {
         );
         if (result.data["Note"]) {
           setNote(result.data["Note"]);
-          console.log("note");
+
           setRowData([]);
         } else {
           const obj = result.data["Time Series (5min)"];
@@ -112,8 +112,6 @@ export default function Intraday({ company, value }) {
   return (
     <div>
       <div className="table">
-        {/* {isError && <div>Something went wrong...</div>} */}
-        {/* {isLoading && <div className="loading">Loading...</div>} */}
         {rowData && (
           <div className="result-list">
             <div
