@@ -3,20 +3,18 @@ import axios from "axios";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-balham.css";
+import "../../css/Intraday.css";
 
 export default function Intraday({ company, value }) {
   const API_KEY = localStorage.getItem("apiKey");
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [metaData, setMetaData] = useState({});
-  const [timeSeries, setTimeSeries] = useState({});
   const [note, setNote] = useState();
+  const [rowData, setRowData] = useState(null);
   const [gridApi, setGridApi] = useState();
   const [gridColumnApi, setGridColumnApi] = useState();
-  const [url, setUrl] = useState(
-    `https://www.alphavantage.co/query?function=${value}&symbol=${company}&interval=5min&apikey=${API_KEY}`
-  );
-  const defaultColDef = {
+
+  const defaultColdDef = {
     flex: 1,
     sortable: true,
     filter: true,
@@ -25,40 +23,24 @@ export default function Intraday({ company, value }) {
 
   const columnDefs = [
     {
-      headerName: "Symbol",
-      field: "symbol",
+      headerName: "Open",
+      field: "open",
     },
     {
-      headerName: "Name",
-      field: "name",
+      headerName: "High",
+      field: "high",
     },
     {
-      headerName: "Type",
-      field: "type",
+      headerName: "Low",
+      field: "low",
     },
     {
-      headerName: "Region",
-      field: "region",
+      headerName: "Close",
+      field: "close",
     },
     {
-      headerName: "Market Open",
-      field: "marketOpen",
-    },
-    {
-      headerName: "Market Close",
-      field: "marketClose",
-    },
-    {
-      headerName: "Timezone",
-      field: "timezone",
-    },
-    {
-      headerName: "Currency",
-      field: "currency",
-    },
-    {
-      headerName: "MatchScore",
-      field: "matchScore",
+      headerName: "Volume",
+      field: "volume",
     },
   ];
 
@@ -72,15 +54,30 @@ export default function Intraday({ company, value }) {
       setIsError(false);
       setIsLoading(true);
       try {
-        const result = await axios(url);
-        console.log(result);
-        if (result.data && result.data["Note"]) {
+        const result = await axios(
+          `https://www.alphavantage.co/query?function=${value}&symbol=${company}&interval=5min&apikey=${API_KEY}`
+        );
+        if (result.data["Note"]) {
           setNote(result.data["Note"]);
           console.log("note");
+          setRowData([]);
         } else {
-          setMetaData(result.data["Meta Data"]);
-          setTimeSeries(result.data["Time Series (5min)"]);
-          console.log("all data");
+          const obj = result.data["Time Series (5min)"];
+          const myData = Object.keys(obj).map((key) => {
+            return obj[key];
+          });
+
+          myData.forEach((obj) => {
+            renameKey(obj, "1. open", "open");
+            renameKey(obj, "2. high", "high");
+            renameKey(obj, "3. low", "low");
+            renameKey(obj, "4. close", "close");
+            renameKey(obj, "5. volume", "volume");
+          });
+
+          const updatedJson = myData;
+
+          setRowData(updatedJson);
         }
       } catch (error) {
         setIsError(true);
@@ -90,6 +87,11 @@ export default function Intraday({ company, value }) {
     fetchItem();
   }, []);
 
+  function gridReadyHandler(params) {
+    setGridApi(params.api);
+    setGridColumnApi(params.columnApi);
+  }
+
   if (note) {
     return (
       <div>
@@ -98,6 +100,7 @@ export default function Intraday({ company, value }) {
       </div>
     );
   }
+
   if (isError) {
     return <div> Something went wrong</div>;
   }
@@ -108,34 +111,25 @@ export default function Intraday({ company, value }) {
 
   return (
     <div>
-      <div>
-        <div>
-          {metaData ? (
-            Object.keys(metaData).map(function (key, index) {
-              return (
-                <div key={index}>
-                  {key} : {metaData[key]}
-                </div>
-              );
-            })
-          ) : (
-            <>no meta data</>
-          )}
-        </div>
-        <div className="time-series">
-          {timeSeries ? (
-            Object.keys(timeSeries).map(function (key, index) {
-              return (
-                <div key={index}>
-                  {key} : open : {timeSeries[key]["1. open"]}
-                  {key} : close : {timeSeries[key]["4. close"]}
-                </div>
-              );
-            })
-          ) : (
-            <>no time series data</>
-          )}
-        </div>
+      <div className="table">
+        {/* {isError && <div>Something went wrong...</div>} */}
+        {/* {isLoading && <div className="loading">Loading...</div>} */}
+        {rowData && (
+          <div className="result-list">
+            <div
+              className="ag-theme-balham"
+              style={{ width: "80%", height: "65vh" }}
+            >
+              <AgGridReact
+                // rowStyle={rowStyle}
+                onGridReady={gridReadyHandler}
+                columnDefs={columnDefs}
+                rowData={rowData}
+                defaultColDef={defaultColdDef}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
