@@ -7,6 +7,7 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-balham.css";
 import history from "../components/History";
 import Nav from "../components/Nav";
+import Loading from "../components/Loading";
 
 function Search() {
   const API_KEY = localStorage.getItem("apiKey");
@@ -173,7 +174,7 @@ function Search() {
         </div>
         <div className="table">
           {isError && <div>Something went wrong...</div>}
-          {isLoading && <div className="loading">Loading...</div>}
+          {isLoading && <Loading />}
           {rowData && (
             <div className="result-list">
               <div
