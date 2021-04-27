@@ -7,6 +7,8 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-balham.css";
 import history from "../components/History";
 import Nav from "../components/Nav";
+import Loading from "../components/Loading";
+import Note from "../components/Note";
 
 function Search() {
   const API_KEY = localStorage.getItem("apiKey");
@@ -19,6 +21,7 @@ function Search() {
   const [gridApi, setGridApi] = useState();
   const [gridColumnApi, setGridColumnApi] = useState();
   const [rowData, setRowData] = useState(null);
+  const [note, setNote] = useState();
 
   const defaultColdDef = {
     flex: 1,
@@ -84,6 +87,12 @@ function Search() {
           const result = await axios(
             `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchKeyWord}&apikey=${API_KEY}`
           );
+          if (result.data["Note"]) {
+            setNote(result.data["Note"]);
+            setRowData([]);
+            console.log("note", note);
+          }
+
           if (result.data.bestMatches) {
             const arr = result.data.bestMatches;
 
@@ -173,7 +182,7 @@ function Search() {
         </div>
         <div className="table">
           {isError && <div>Something went wrong...</div>}
-          {isLoading && <div className="loading">Loading...</div>}
+          {isLoading && <Loading />}
           {rowData && (
             <div className="result-list">
               <div

@@ -4,6 +4,8 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-balham.css";
 import "../../css/Intraday.css";
+import Loading from "../Loading";
+import Note from "../Note";
 
 export default function Intraday({ company, value }) {
   const API_KEY = localStorage.getItem("apiKey");
@@ -94,10 +96,11 @@ export default function Intraday({ company, value }) {
 
   if (note) {
     return (
-      <div>
-        You have used API calls limit, please wait a minute and refresh to
-        continue.
-      </div>
+      <Note />
+      // <div>
+      //   You have used API calls limit, please wait a minute and refresh to
+      //   continue.
+      // </div>
     );
   }
 
@@ -106,7 +109,7 @@ export default function Intraday({ company, value }) {
   }
 
   if (isLoading) {
-    return <div>Loading....</div>;
+    return <Loading />;
   }
 
   return (
