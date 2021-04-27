@@ -4,6 +4,7 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-balham.css";
 import "../../css/Intraday.css";
+import Loading from "../Loading";
 
 export default function Daily({ company, value }) {
   const API_KEY = localStorage.getItem("apiKey");
@@ -106,7 +107,7 @@ export default function Daily({ company, value }) {
   }
 
   if (isLoading) {
-    return <div>Loading....</div>;
+    return <Loading />;
   }
 
   return (
