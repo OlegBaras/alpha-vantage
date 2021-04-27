@@ -74,28 +74,24 @@ function Search() {
     delete obj[oldKey];
   };
   useEffect(() => {
+    //check if there is search key word at all
     if (searchKeyWord) {
+      console.log("render times");
       const fetchItems = async () => {
         setIsError(false);
         setIsLoading(true);
-
-        if (localStorage.getItem("SearchKeyWord")) {
-          setSearchKeyWord(localStorage.getItem("SearchKeyWord"));
-        }
+        console.log("isLoading", isLoading);
 
         try {
-          const result = await axios(
-            `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchKeyWord}&apikey=${API_KEY}`
-          );
+          const result = await axios(url);
+
           if (result.data["Note"]) {
             setNote(result.data["Note"]);
             setRowData([]);
+            console.log("rowData", rowData);
             console.log("note", note);
-          }
-
-          if (result.data.bestMatches) {
+          } else {
             const arr = result.data.bestMatches;
-
             arr.forEach((obj) => {
               renameKey(obj, "1. symbol", "symbol");
               renameKey(obj, "2. name", "name");
@@ -109,23 +105,21 @@ function Search() {
             });
             const updatedJson = arr;
             setRowData(updatedJson);
-          } else {
-            setRowData([]);
           }
-          setRowData(result.data.bestMatches);
         } catch (error) {
+          console.log("error", error);
           setIsError(true);
         }
         setIsLoading(false);
       };
       fetchItems();
-      setUrl("");
     } else {
       return;
     }
   }, [url]);
 
-  function setSearchV(e) {
+  // search symbol value change handler
+  function onSearchKeyChangeHandler(e) {
     setSearchKeyWord(e.target.value);
     localStorage.setItem("SearchKeyWord", e.target.value);
   }
@@ -164,7 +158,7 @@ function Search() {
             type="text"
             name="searchKeyword"
             value={searchKeyWord}
-            onChange={setSearchV}
+            onChange={onSearchKeyChangeHandler}
             onKeyDown={handleKeyDown}
             autoComplete="off"
             required
@@ -181,16 +175,16 @@ function Search() {
           </button>
         </div>
         <div className="table">
-          {isError && <div>Something went wrong...</div>}
-          {isLoading && <Loading />}
-          {rowData && (
+          {isError ? <div>Something went wrong...</div> : null}
+          {isLoading ? <Loading /> : null}
+          {note ? <Note /> : null}
+          {rowData ? (
             <div className="result-list">
               <div
                 className="ag-theme-balham"
                 style={{ width: "80%", height: 315 }}
               >
                 <AgGridReact
-                  // rowStyle={rowStyle}
                   onGridReady={gridReadyHandler}
                   columnDefs={columnDefs}
                   rowData={rowData}
@@ -199,7 +193,7 @@ function Search() {
                 />
               </div>
             </div>
-          )}
+          ) : null}
         </div>
       </div>
     </div>

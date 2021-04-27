@@ -55,13 +55,13 @@ export default function Intraday({ company, value }) {
     const fetchItem = async () => {
       setIsError(false);
       setIsLoading(true);
+      console.log("isLoading", isLoading);
       try {
         const result = await axios(
           `https://www.alphavantage.co/query?function=${value}&symbol=${company}&apikey=${API_KEY}`
         );
         if (result.data["Note"]) {
           setNote(result.data["Note"]);
-
           setRowData([]);
         } else {
           const obj = result.data["Weekly Time Series"];
@@ -76,9 +76,7 @@ export default function Intraday({ company, value }) {
             renameKey(obj, "4. close", "close");
             renameKey(obj, "5. volume", "volume");
           });
-
           const updatedJson = myData;
-
           setRowData(updatedJson);
         }
       } catch (error) {
@@ -95,13 +93,7 @@ export default function Intraday({ company, value }) {
   }
 
   if (note) {
-    return (
-      <Note />
-      // <div>
-      //   You have used API calls limit, please wait a minute and refresh to
-      //   continue.
-      // </div>
-    );
+    return <Note />;
   }
 
   if (isError) {
