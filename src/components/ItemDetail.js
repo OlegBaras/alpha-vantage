@@ -14,7 +14,7 @@ import Nav from "./Nav";
 import "../css/ItemDetails.css";
 
 function ItemDetail({ match }) {
-  const [value, setValue] = useState([]);
+  const [value, setValue] = useState("TIME_SERIES_INTRADAY");
   const [indicatorValue, setIndicatorValue] = useState("");
   const company = match.params.id;
   const history = useHistory();
