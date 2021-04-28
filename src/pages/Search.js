@@ -187,7 +187,7 @@ function Search() {
               </div>
             </div>
           ) : null}
-          {!rowData.length && !isLoading && !note ? (
+          {!rowData.length && !isLoading && !note && !isError ? (
             <SymbolNotFoundNote />
           ) : null}
         </div>
