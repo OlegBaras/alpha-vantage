@@ -3,8 +3,9 @@ import axios from "axios";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-balham.css";
-import "../../css/Intraday.css";
+import "../../css/Table.css";
 import Loading from "../Loading";
+import Note from "../Note";
 
 export default function Intraday({ company, value }) {
   const API_KEY = localStorage.getItem("apiKey");
@@ -60,7 +61,6 @@ export default function Intraday({ company, value }) {
         );
         if (result.data["Note"]) {
           setNote(result.data["Note"]);
-          console.log("note");
           setRowData([]);
         } else {
           const obj = result.data["Monthly Time Series"];
@@ -94,12 +94,7 @@ export default function Intraday({ company, value }) {
   }
 
   if (note) {
-    return (
-      <div>
-        You have used API calls limit, please wait a minute and refresh to
-        continue.
-      </div>
-    );
+    return <Note />;
   }
 
   if (isError) {
@@ -113,8 +108,6 @@ export default function Intraday({ company, value }) {
   return (
     <div>
       <div className="table">
-        {/* {isError && <div>Something went wrong...</div>} */}
-        {/* {isLoading && <div className="loading">Loading...</div>} */}
         {rowData && (
           <div className="result-list">
             <div
@@ -122,7 +115,6 @@ export default function Intraday({ company, value }) {
               style={{ width: "80%", height: "65vh" }}
             >
               <AgGridReact
-                // rowStyle={rowStyle}
                 onGridReady={gridReadyHandler}
                 columnDefs={columnDefs}
                 rowData={rowData}

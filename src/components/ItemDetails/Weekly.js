@@ -3,7 +3,7 @@ import axios from "axios";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-balham.css";
-import "../../css/Intraday.css";
+import "../../css/Table.css";
 import Loading from "../Loading";
 import Note from "../Note";
 
@@ -55,7 +55,6 @@ export default function Intraday({ company, value }) {
     const fetchItem = async () => {
       setIsError(false);
       setIsLoading(true);
-      console.log("isLoading", isLoading);
       try {
         const result = await axios(
           `https://www.alphavantage.co/query?function=${value}&symbol=${company}&apikey=${API_KEY}`
@@ -105,25 +104,22 @@ export default function Intraday({ company, value }) {
   }
 
   return (
-    <div>
-      <div className="table">
-        {rowData && (
-          <div className="result-list">
-            <div
-              className="ag-theme-balham"
-              style={{ width: "80%", height: "65vh" }}
-            >
-              <AgGridReact
-                // rowStyle={rowStyle}
-                onGridReady={gridReadyHandler}
-                columnDefs={columnDefs}
-                rowData={rowData}
-                defaultColDef={defaultColdDef}
-              />
-            </div>
+    <div className="table">
+      {rowData && (
+        <div className="result-list">
+          <div
+            className="ag-theme-balham"
+            style={{ width: "80%", height: "65vh" }}
+          >
+            <AgGridReact
+              onGridReady={gridReadyHandler}
+              columnDefs={columnDefs}
+              rowData={rowData}
+              defaultColDef={defaultColdDef}
+            />
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
