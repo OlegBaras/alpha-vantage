@@ -1,9 +1,7 @@
 .message {
+  margin-top: 1rem;
   width: 40%;
   padding: 2rem;
-  /* display: flex;
-  justify-content: center;
-  align-items: center; */
   background-color: #5fa8d3;
   color: white;
 }
