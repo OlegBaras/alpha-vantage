@@ -5,7 +5,6 @@
 }
 
 .root {
-  /* height: 60vh; */
   height: 100%;
   display: flex;
   justify-content: center;
@@ -14,16 +13,12 @@
 }
 
 .form {
-  display: flex;
-  justify-content: center;
-  width: 25%;
-  /* overflow: hidden; */
 }
 
 .form button {
   position: absolute;
   right: 0px;
-  bottom: 3px;
+  bottom: 5px;
   color: #5fa8d3;
   background: white;
   border: none;
