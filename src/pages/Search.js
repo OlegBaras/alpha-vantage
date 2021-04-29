@@ -78,15 +78,16 @@ function Search() {
     if (searchKeyWord) {
       const fetchItems = async () => {
         setIsError(false);
+        setNote("");
+        setRowData([]);
         setIsLoading(true);
         try {
           const result = await axios(url);
           if (result.data["Note"]) {
             setNote(result.data["Note"]);
-            setRowData([]);
           } else {
-            const arr = result.data.bestMatches;
-            arr.forEach((obj) => {
+            const { bestMatches } = result.data;
+            bestMatches.forEach((obj) => {
               renameKey(obj, "1. symbol", "symbol");
               renameKey(obj, "2. name", "name");
               renameKey(obj, "3. type", "type");
@@ -97,7 +98,7 @@ function Search() {
               renameKey(obj, "8. currency", "currency");
               renameKey(obj, "9. matchScore", "matchScore");
             });
-            const updatedJson = arr;
+            const updatedJson = bestMatches;
             setRowData(updatedJson);
           }
         } catch (error) {
@@ -123,19 +124,6 @@ function Search() {
       `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchKeyWord}&apikey=${API_KEY}`
     );
   }
-  // On "Enter" key press
-  function handleKeyDown(e) {
-    if (e.key === "Enter") {
-      if (searchKeyWord.length > 0) {
-        e.preventDefault();
-        setUrl(
-          `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchKeyWord}&apikey=${API_KEY}`
-        );
-      } else {
-        return;
-      }
-    }
-  }
 
   function gridReadyHandler(params) {
     setGridApi(params.api);
@@ -147,18 +135,22 @@ function Search() {
       <Nav />
       <div className="root">
         <div className="form">
-          <input
-            type="text"
-            name="searchKeyword"
-            value={searchKeyWord}
-            onChange={onSearchKeyChangeHandler}
-            onKeyDown={handleKeyDown}
-            autoComplete="off"
-            required
-          />
-          <label htmlFor="API_KEY" className="label-name">
-            <span className="content-name">Enter Search Symbol, i.e. ibm</span>
-          </label>
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              name="searchKeyword"
+              value={searchKeyWord}
+              onChange={onSearchKeyChangeHandler}
+              // onKeyDown={handleKeyDown}
+              autoComplete="off"
+              required
+            />
+            <label htmlFor="API_KEY" className="label-name">
+              <span className="content-name">
+                Enter Search Symbol, i.e. ibm
+              </span>
+            </label>
+          </form>
           <button
             disabled={searchKeyWord.length < 1}
             type="submit"
@@ -171,7 +163,7 @@ function Search() {
           {isError ? <div>Something went wrong...</div> : null}
           {isLoading ? <Loading /> : null}
           {note && !isLoading ? <Note /> : null}
-          {rowData.length && !isError && !isLoading && !note ? (
+          {rowData.length ? (
             <div className="result-list">
               <div
                 className="ag-theme-balham"
@@ -186,10 +178,10 @@ function Search() {
                 />
               </div>
             </div>
-          ) : null}
-          {!rowData.length && !isLoading && !note && !isError ? (
+          ) : (
             <SymbolNotFoundNote />
-          ) : null}
+          )}
+          {/* {!rowData.length ? <SymbolNotFoundNote /> : null} */}
         </div>
       </div>
     </div>
