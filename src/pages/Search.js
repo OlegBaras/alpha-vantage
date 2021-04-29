@@ -21,7 +21,7 @@ function Search() {
   const [gridApi, setGridApi] = useState();
   const [gridColumnApi, setGridColumnApi] = useState();
   const [rowData, setRowData] = useState([]);
-  const [note, setNote] = useState();
+  const [note, setNote] = useState("");
 
   const defaultColdDef = {
     flex: 1,
@@ -78,9 +78,9 @@ function Search() {
     if (searchKeyWord) {
       const fetchItems = async () => {
         setIsError(false);
-        setNote("");
-        setRowData([]);
         setIsLoading(true);
+        setNote("");
+
         try {
           const result = await axios(url);
           if (result.data["Note"]) {
@@ -100,6 +100,7 @@ function Search() {
             });
             const updatedJson = bestMatches;
             setRowData(updatedJson);
+            setNote("");
           }
         } catch (error) {
           setIsError(true);
@@ -107,6 +108,7 @@ function Search() {
         setIsLoading(false);
       };
       fetchItems();
+      setRowData([]);
     } else {
       return;
     }
@@ -162,7 +164,7 @@ function Search() {
         <div className="table">
           {isError ? <div>Something went wrong...</div> : null}
           {isLoading ? <Loading /> : null}
-          {note && !isLoading ? <Note /> : null}
+          {note ? <Note /> : null}
           {rowData.length ? (
             <div className="result-list">
               <div
@@ -178,10 +180,10 @@ function Search() {
                 />
               </div>
             </div>
-          ) : (
+          ) : null}
+          {!rowData.length && !note && !isLoading ? (
             <SymbolNotFoundNote />
-          )}
-          {/* {!rowData.length ? <SymbolNotFoundNote /> : null} */}
+          ) : null}
         </div>
       </div>
     </div>
