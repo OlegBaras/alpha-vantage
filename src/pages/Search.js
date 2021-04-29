@@ -82,7 +82,7 @@ function Search() {
         setNote("");
 
         try {
-          const result = await axios(url);
+          const result = await axios.get(url);
           if (result.data["Note"]) {
             setNote(result.data["Note"]);
           } else {
@@ -115,7 +115,7 @@ function Search() {
   }, [url]);
 
   // search symbol value change handler
-  function onSearchKeyChangeHandler(e) {
+  function onSearchKeyChange(e) {
     setSearchKeyWord(e.target.value);
     localStorage.setItem("SearchKeyWord", e.target.value);
   }
@@ -142,8 +142,7 @@ function Search() {
               type="text"
               name="searchKeyword"
               value={searchKeyWord}
-              onChange={onSearchKeyChangeHandler}
-              // onKeyDown={handleKeyDown}
+              onChange={onSearchKeyChange}
               autoComplete="off"
               required
             />
